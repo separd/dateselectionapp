@@ -1,38 +1,70 @@
-<!DOCTYPE html>
-<html>
+
+<!doctype html>
+<html lang="en" ng-app="dateselectionguru" >
 <head>
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <title>Hello World</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="DATESELECTION GURU">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DATESELECTION GURU</title>
+    <link href="css/roboto.css" rel="stylesheet">
+    <link href="css/icon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.light_green-lime.min.css" />
+    <link rel="stylesheet" href="css/angular-material-min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="app">
-    <h1>Apache Cordova</h1>
-    <div id="deviceready" class="blink">
-        <p class="event listening">Connecting to Device</p>
-        <p class="event received">Device is Ready</p>
-    </div>
-    <button onclick="hasReadPermission()">has read permission</button><br/><br/>
-    <button onclick="requestReadPermission()">req read permission</button><br/><br/>
-    <button onclick="hasWritePermission()">has write permission</button><br/><br/>
-    <button onclick="requestWritePermission()">req write permission</button><br/><br/>
-    <button onclick="hasReadWritePermission()">has readwrite permission</button><br/><br/>
-    <button onclick="requestReadWritePermission()">req readwrite permission</button><br/><br/>
-    <button onclick="openCalendar()">open calendar</button><br/><br/>
-    <button onclick="listCalendars()">list calendars</button><br/><br/>
-    <button onclick="createCalendar()">create calendar</button><br/><br/>
-    <button onclick="createCalendarEvent()">create event</button><br/><br/>
-    <button onclick="createCalendarEventWithOptions()">create event with options</button><br/><br/>
-    <button onclick="createCalendarEventInteractively()">create event interactively</button><br/><br/>
-    <button onclick="createCalendarEventInteractivelyWithOptions()">create event interactively with options</button><br/><br/>
-    <button onclick="deleteEvent()">delete event</button><br/><br/>
-    <button onclick="findEventWithFilter()">find event with filter</button><br/><br/>
-    <button onclick="findEventNoFilter()">find event no filter</button>
+<div class="layout-transparent mdl-layout mdl-js-layout">
+	<div class="mdl-layout__drawer">
+		<span class="mdl-layout-title">GURU MENU</span>
+		<nav class="mdl-navigation">
+			<a class="mdl-navigation__link" href="#getting-started">Person list</a>
+            <a class="mdl-navigation__link" href="https://github.com/bradberger/angular-material-calendar">Settings</a>
+		</nav>
+	</div>
+	<main class="mdl-layout__content">
+		<div class="container text-center" style="padding: 16px 0 13px;">DATESELECTION GURU</div>
+		<div class="page-content">
+			<div class="container" ng-controller="calendarCtrl">
+				<div style="height: 350px;">
+                        <calendar-md id="calendar-demo"
+                        flex layout layout-fill
+                        calendar-direction="direction"
+                        on-prev-month="prevMonth"
+                        on-next-month="nextMonth"
+                        on-day-click="dayClick"
+                        title-format="'MMMM y'"
+                        ng-model='selectedDate'
+                        day-format="dayFormat"
+                        day-label-format="'EEE'"
+                        day-label-tooltip-format="'EEEE'"
+                        day-tooltip-format="'fullDate'"
+                        week-starts-on="weekStartsOn"
+                        tooltips="false"
+                        day-content="setDayContent"
+                        disable-future-selection="disableFutureDates"></calendar-md>
+				</div>
+				<div class="mdl-grid">
+					<div class="mdl-cell md-cell--12-col mdl-cell--12-col-desktop"></div>
+				</div>
+				<div>
+					<md-select ng-model="selection" placeholder="Select an Option" ng-change="activitySelect(selection)">
+						<md-optgroup label="{{currentGroup}}" ng-repeat="currentGroup in groupList">
+							<md-option ng-value="activity" ng-repeat="activity in activities | filter: {group: currentGroup}">{{activity.name}}</md-option>
+						</md-optgroup>
+					</md-select>
+				</div>
+            </div>
+        </div>
+    </main>
 </div>
-<script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript" src="js/demo.js"></script>
+<script src="js/material.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-animate.min.js"></script>
+<script src="js/angular-aria.min.js"></script>
+<script src="js/angular-sanitize.min.js"></script>
+<script src="js/angular-material.min.js"></script>
+<script src="js/angular-material-calendar.js"></script>
+<script src="js/demo.js"></script>
 </body>
 </html>
