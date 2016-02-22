@@ -332,16 +332,12 @@ angular.module("dateselectionguru").controller("calendarCtrl", function($scope, 
         return /*effect28 + ' + ' + officer + ' = ' + */scopeRating;
     }
 
-
-// Here I'm just calculating the groups when the controller runs
-// You would probably want to use a $watch if you expected the list to change
-  $scope.groupList = $scope.activities.reduce(function(previous, current) {
-    if (previous.indexOf(current.group) === -1) {
-      previous.push(current.group);
-    }
-
-    return previous;
-  }, []);
+    $scope.groupList = $scope.activities.reduce(function(previous, current) {
+        if (previous.indexOf(current.group) === -1) {
+            previous.push(current.group);
+        }
+        return previous;
+    }, []);
 
 	// CALENDAR
 
@@ -411,7 +407,7 @@ angular.module("dateselectionguru").controller("calendarCtrl", function($scope, 
         if (dayValue == 0) {
             return '';
         } else {
-            return '<div class="activity activity' + dayValue + '" layout-align="center center"></div>';
+            return '<div class="activity activity' + dayValue + '" layout-align="center center">' + dayValue + '</div>';
         }
     }
 
