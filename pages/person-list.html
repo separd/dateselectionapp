@@ -1,0 +1,15 @@
+<div class="page-content" style="height: calc(100vh - 100px)">
+	<div class="container">
+		<md-list-item class="md-2-line"  ng-repeat="(key, person) in personlist">
+			<div class="md-list-item-text">
+				<h3>{{person.name}}</h3>
+				<p>{{person.date | date:'d'}}. {{person.date | date:'MMMM' | translate}} {{person.date | date:'yyyy'}}</p>
+				<md-icon md-svg-src="img/close-circle.svg" ng-click="deletePersonForm(key)" class="md-secondary md-hue-3"></md-icon>
+			</div>
+		</md-list-item>
+		<md-divider ></md-divider>
+		<md-button class="md-fab" aria-label="{{'ADD_PERSON' | translate}}" ng-click="addPersonForm()">
+			<md-icon md-svg-src="img/plus.svg"></md-icon>
+		</md-button>
+	</div>
+</div>

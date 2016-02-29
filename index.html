@@ -7,8 +7,8 @@
     <meta name="description" content="DATESELECTION GURU">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DATESELECTION GURU</title>
-    <link href="css/roboto.css" rel="stylesheet">
-    <link href="css/icon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/roboto.css">
+    <link rel="stylesheet" href="css/icon.css">
     <link rel="stylesheet" href="css/material.min.css" />
     <link rel="stylesheet" href="css/angular-material-min.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -17,45 +17,15 @@
 <div class="layout-transparent mdl-layout mdl-js-layout">
 	<div class="mdl-layout__drawer">
 		<span class="mdl-layout-title">GURU MENU</span>
-		<nav class="mdl-navigation">
-			<a class="mdl-navigation__link" href="#getting-started">Person list</a>
-            <a class="mdl-navigation__link" href="https://github.com/bradberger/angular-material-calendar">Settings</a>
+		<nav class="mdl-navigation" >
+            <a class="mdl-navigation__link" menu-close ng-click="closeNav()" href="#/">{{'CALENDAR' | translate}}</a>
+			<a class="mdl-navigation__link" menu-close ng-click="closeNav()" href="#person-list">{{'PERSON_LIST' | translate}}</a>
+            <a class="mdl-navigation__link" menu-close ng-click="closeNav()" href="#language">{{'LANGUAGE' | translate}}</a>
 		</nav>
 	</div>
 	<main class="mdl-layout__content">
 		<div class="container text-center" style="padding: 16px 0 13px;">DATESELECTION GURU</div>
-		<div class="page-content">
-			<div class="container" ng-controller="calendarCtrl">
-				<div style="height: 350px;">
-                        <calendar-md id="calendar-demo"
-                        flex layout layout-fill
-                        calendar-direction="direction"
-                        on-prev-month="prevMonth"
-                        on-next-month="nextMonth"
-                        on-day-click="dayClick"
-                        title-format="'MMMM y'"
-                        ng-model='selectedDate'
-                        day-format="dayFormat"
-                        day-label-format="'EEE'"
-                        day-label-tooltip-format="'EEEE'"
-                        day-tooltip-format="'fullDate'"
-                        week-starts-on="weekStartsOn"
-                        tooltips="false"
-                        day-content="setDayContent"
-                        disable-future-selection="disableFutureDates"></calendar-md>
-				</div>
-				<div class="mdl-grid">
-					<div class="mdl-cell md-cell--12-col mdl-cell--12-col-desktop"></div>
-				</div>
-				<div>
-					<md-select ng-model="selection" placeholder="Select an Option" ng-change="activitySelect(selection)">
-						<md-optgroup label="{{currentGroup}}" ng-repeat="currentGroup in groupList">
-							<md-option ng-value="activity" ng-repeat="activity in activities | filter: {group: currentGroup}">{{activity.name}}</md-option>
-						</md-optgroup>
-					</md-select>
-				</div>
-            </div>
-        </div>
+        <div ng-view></div>
     </main>
 </div>
 <script src="js/material.min.js"></script>
@@ -64,7 +34,12 @@
 <script src="js/angular-aria.min.js"></script>
 <script src="js/angular-sanitize.min.js"></script>
 <script src="js/angular-material.min.js"></script>
+<script src="js/angular-route.min.js"></script>
+<script src="js/ngStorage.min.js"></script>
 <script src="js/angular-material-calendar.js"></script>
-<script src="js/demo.js"></script>
+<script src="js/angular-translate.min.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/astro-source.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
