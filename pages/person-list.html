@@ -1,4 +1,4 @@
-<div class="page-content" style="height: calc(100vh - 100px)">
+<div class="page-content" style="min-height: calc(100vh - 100px)">
 	<div class="container">
 		<md-list-item class="md-2-line"  ng-repeat="(key, person) in personlist">
 			<div class="md-list-item-text">
@@ -8,7 +8,7 @@
 			</div>
 		</md-list-item>
 		<md-divider ></md-divider>
-		<md-button class="md-fab" aria-label="{{'ADD_PERSON' | translate}}" ng-click="addPersonForm()">
+		<md-button class="md-fab md-fab-bottom-right" aria-label="{{'ADD_PERSON' | translate}}" ng-click="addPersonForm()">
 			<md-icon md-svg-src="img/plus.svg"></md-icon>
 		</md-button>
 	</div>

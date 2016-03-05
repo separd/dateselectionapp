@@ -51,14 +51,16 @@ var $tranlationEN = {
     'installation-of-interior-doors': '',
     'installation-of-water-features': '',
 
+    DAY_GENERALY: 'Day generaly',
+    ADD_PERSON: 'Add person',
+
     NAME: 'Name',
     DATE_DAY: 'Date',
     DATE_MONTH: 'Month',
     DATE_YEAR: 'Year',
+    DELETE_PERSON: 'Delete person',
+    CANCEL: 'Cancel'
 
-    'january': 'january',
-    'february': 'february',
-    'march': 'march',
   };
 
 var $tranlationSK = {
@@ -114,10 +116,15 @@ var $tranlationSK = {
     'installation-of-interior-doors': 'Inštalovanie dverí do interiéru',
     'installation-of-water-features': 'Inštalovanie vodných prvkov',
 
+    DAY_GENERALY: 'Deň všeobecne',
+    ADD_PERSON: 'Pridať osobu',
+
     NAME: 'Meno',
     DATE_DAY: 'Deň',
     DATE_MONTH: 'Mesiac',
     DATE_YEAR: 'Rok',
+    DELETE_PERSON: 'Zmazať osobu',
+    CANCEL: 'Zrušiť',
 
     'January': 'Január',
     'February': 'Február',
@@ -139,4 +146,12 @@ var $tranlationSK = {
     'Fri': 'Pi',
     'Sat': 'So',
     'Sun': 'Ne',
+
+    'Monday': 'Pondelok',
+    'Tuesday': 'Utorok',
+    'Wednesday': 'Streda',
+    'Thursday': 'Štvrtok',
+    'Friday': 'Piatok',
+    'Saturday': 'Sobota',
+    'Sunday': 'Nedeľa',
 };

@@ -51,7 +51,7 @@ app.config(function ($translateProvider) {
   $translateProvider.preferredLanguage('en');
 });
 
-app.controller("calendarCtrl", function($scope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage) {
+app.controller("calendarCtrl", function($scope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet) {
 
       $scope.$storage = $localStorage.$default({
             locale: {lang: 'en', weekstart: 1},
@@ -63,9 +63,10 @@ app.controller("calendarCtrl", function($scope, $filter, $q, $timeout, $log, $tr
       $scope.activities = activities;
       $scope.dongGongDefinition = dongGongDefinition;
 
-      $scope.selectedActivity = null;
+      $scope.personlist = $scope.$storage.personlist;
+      $scope.selectedPerson = null;
 
-      console.log($scope.$storage.locale);
+      $scope.selectedActivity = null;
 
     function setDateTable(d) {
         $scope.dateTable = {year:{}, month:{}, day:{}};
@@ -195,6 +196,30 @@ app.controller("calendarCtrl", function($scope, $filter, $q, $timeout, $log, $tr
             MaterialCalendarData.setDayContent(date, getDayHtml(dayValue));
         });
     }
+    
+    $scope.personSelect = function(person) {
+        $scope.selectedPerson = person;
+        if (person == 'add') {
+            $mdBottomSheet.show({
+                  templateUrl: 'pages/person-add.html',
+                  controller: 'addPersonCtrl'
+            }).then(function(newPerson){
+                console.log('th');
+                if (newPerson > 0) {
+                    $scope.selectedPerson = newPerson;
+                } else {
+                    $scope.selectedPerson = null;
+                }
+            }, function() {
+                $scope.selectedPerson = null;
+            });
+        }
+        /*angular.forEach(MaterialCalendarData.data, function(value, key) {
+            var date = new Date(key);
+            dayValue = getRating(date, activity.name);
+            MaterialCalendarData.setDayContent(date, getDayHtml(dayValue));
+        });*/
+    }
 
     function getDayHtml(dayValue) {
         if (dayValue == 0) {
@@ -221,6 +246,7 @@ app.controller("languageCtrl", function($scope, $filter, $q, $timeout, $log, $tr
             locale: {lang: 'en', weekstart: 1},
             personlist: []
       });
+      $translate.use($scope.$storage.locale.lang);
 
       $scope.laguageSelect = function(lang) {
             $translate.use(lang);
@@ -247,6 +273,7 @@ app.controller("personCtrl", function($scope, $filter, $q, $timeout, $log, $tran
             locale: {lang: 'en', weekstart: 1},
             personlist: []
       });
+      $translate.use($scope.$storage.locale.lang);
 
       $scope.personlist = $scope.$storage.personlist;
 
@@ -272,7 +299,7 @@ app.controller("personCtrl", function($scope, $filter, $q, $timeout, $log, $tran
 });
 
 app.controller("addPersonCtrl", function($scope, $mdBottomSheet, $localStorage) {
-    
+
     $scope.$storage = $localStorage.$default({
             locale: {lang: 'en', weekstart: 1},
             personlist: []
@@ -284,13 +311,13 @@ app.controller("addPersonCtrl", function($scope, $mdBottomSheet, $localStorage) 
     }
     $scope.datedays = datedays;
 
-    $scope.datemonths = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+    $scope.datemonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     $scope.savePerson = function() {
         var bornDate = new Date($scope.user.dateyear, $scope.user.datemonth, $scope.user.dateday);
         person = {name: $scope.user.name, date: bornDate};
         $scope.$storage.personlist.push(person);
-        $mdBottomSheet.hide();
+        $mdBottomSheet.hide($scope.$storage.personlist.length - 1);
     };
 });
 
@@ -305,9 +332,12 @@ app.controller("deletePersonCtrl", function($scope, $mdBottomSheet, $localStorag
     $scope.person = $scope.$storage.personlist[deletekey];
 
     $scope.deletePerson = function() {
-        console.log(deletekey);
-        //$scope.$storage.personlist.push(person);
         $scope.$storage.personlist.splice(deletekey, 1);
         $mdBottomSheet.hide();
     };
+
+    $scope.deleteCancel = function() {
+        $mdBottomSheet.hide();
+    };
+
 });

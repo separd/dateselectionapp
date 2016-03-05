@@ -1,6 +1,6 @@
 		<div class="page-content">
 			<div class="container">
-				<div style="height: 350px;">
+				<div style="height: calc(100vh - 200px);">
                         <calendar-md id="calendar-demo"
                         flex layout layout-fill
                         calendar-direction="direction"
@@ -18,9 +18,7 @@
                         day-content="setDayContent"
                         disable-future-selection="disableFutureDates"></calendar-md>
 				</div>
-				<div class="mdl-grid">
-					<div class="mdl-cell md-cell--12-col mdl-cell--12-col-desktop"></div>
-				</div>
+
 				<div>
 					<md-select ng-model="selection" placeholder="{{'SELECT_ACTIVITY' | translate}}" ng-change="activitySelect(selection)">
 						<md-optgroup label="{{currentGroup | translate}}" ng-repeat="currentGroup in groupList">
@@ -28,5 +26,12 @@
 						</md-optgroup>
 					</md-select>
 				</div>
+
+                        <div>
+                              <md-select ng-model="selectedPerson" placeholder="{{'DAY_GENERALY' | translate}}" ng-change="personSelect(selectedPerson)">
+                                    <md-option ng-value="key" ng-repeat="(key, person) in personlist">{{person.name}}</md-option>
+                                    <md-option value="add">{{'ADD_PERSON' | translate}}</md-option>
+                              </md-select>
+                        </div>
             </div>
         </div>
