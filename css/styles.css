@@ -37,5 +37,8 @@ html,body{font-family:"Roboto",sans-serif;}.styles__ribbon{background-color:rgba
 	background: #A1887F;
 }
 body md-select-menu, body md-content{
-  max-height: 100vh;
+  max-height: 90vh;
+}
+md-option {
+    height: 42px;
 }

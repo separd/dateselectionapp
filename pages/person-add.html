@@ -18,7 +18,7 @@
 			<div flex="50">
 				<md-input-container class="md-block">
 					<label>{{'DATE_MONTH' | translate}}</label>
-					<md-select ng-model="user.datemonth">
+					<md-select ng-model="user.datemonth" class="selectmonth">
 						<md-option ng-repeat="(datenum, datemonth) in datemonths" value="{{datenum}}">{{datemonth | translate}}</md-option>
 					</md-select>
 				</md-input-container>
