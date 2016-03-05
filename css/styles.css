@@ -36,6 +36,6 @@ html,body{font-family:"Roboto",sans-serif;}.styles__ribbon{background-color:rgba
 .layout-transparent {
 	background: #A1887F;
 }
-body .md-bottom-sheet-backdrop md-select-menu, body md-content{
+body md-select-menu, body md-content{
   max-height: 100vh;
 }
