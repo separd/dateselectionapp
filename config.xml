@@ -22,13 +22,15 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+
+    <icon src="img/logo-guru.png" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon src="logo-guru.png" qualifier="mdpi" />
+        <icon src="img/logo-guru.png" qualifier="mdpi" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
-        <icon src="logo-guru.png" qualifier="mdpi" />
+        <icon src="img/logo-guru.png" qualifier="mdpi" />
     </platform>
 </widget>
