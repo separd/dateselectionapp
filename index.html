@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/icon.css">
     <link rel="stylesheet" href="css/material.min.css" />
     <link rel="stylesheet" href="css/angular-material-min.css">
+    <link rel="stylesheet" href="css/ng-hamburger-helper.css" />
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -18,13 +19,12 @@
 	<div class="mdl-layout__drawer">
 		<span class="mdl-layout-title">GURU MENU</span>
 		<nav class="mdl-navigation" >
-            <a class="mdl-navigation__link" menu-close ng-click="closeNav()" href="#/">{{'CALENDAR' | translate}}</a>
-			<a class="mdl-navigation__link" menu-close ng-click="closeNav()" href="#person-list">{{'PERSON_LIST' | translate}}</a>
-            <a class="mdl-navigation__link" menu-close ng-click="closeNav()" href="#language">{{'LANGUAGE' | translate}}</a>
+            <a class="mdl-navigation__link" menu-toggle href="#/">{{'CALENDAR' | translate}}</a>
+			<a class="mdl-navigation__link" menu-toggle href="#person-list">{{'PERSON_LIST' | translate}}</a>
+            <a class="mdl-navigation__link" menu-toggle href="#language">{{'LANGUAGE' | translate}}</a>
 		</nav>
 	</div>
 	<main class="mdl-layout__content">
-		<div class="container text-center" style="padding: 16px 0 13px;">DATESELECTION GURU</div>
         <div ng-view></div>
     </main>
 </div>
@@ -36,10 +36,12 @@
 <script src="js/angular-material.min.js"></script>
 <script src="js/angular-route.min.js"></script>
 <script src="js/ngStorage.min.js"></script>
+<script src="js/ng-hamburger-helper.js"></script>
 <script src="js/angular-material-calendar.js"></script>
 <script src="js/angular-translate.min.js"></script>
 <script src="js/translations.js"></script>
 <script src="js/astro-source.js"></script>
+<script src="js/astro.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

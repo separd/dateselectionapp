@@ -3,34 +3,72 @@ html,body{font-family:"Roboto",sans-serif;}.styles__ribbon{background-color:rgba
 .calendar .layout-row {
     position: relative;
 }
+.calendar .layout-row .daydata {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
 .calendar .layout-row .activity {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #f5f5f5;
-    color: #990000;
-    font-weight: 900;
-    text-align: center;
-    font-size: 2em;
     opacity: 0.2;
-
 }
-.calendar .layout-row .activity.activity1 {
+/*.calendar .layout-row .daydata.activity1 {
     background-color: #c8e6c9;
 }
-.calendar .layout-row .activity.activity2 {
+.calendar .layout-row .daydata.activity1, .calendar .layout-row .daydata.activity2 {
     background-color: #a5d6a7;
-}
-.calendar .layout-row .activity.activity3 {
+}*/
+.calendar .layout-row .activity1, .calendar .layout-row .activity2, .calendar .layout-row .activity3 {
     background-color: #66bb6a;
 }
-.calendar .layout-row .activity.activity4 {
+/*.calendar .layout-row .daydata.activity4 {
     background-color: #388e3c;
-}
-.calendar .layout-row .activity.activity5 {
+}*/
+.calendar .layout-row .activity4, .calendar .layout-row .activity5 {
     background-color: #1b5e20;
+}
+.ratingwrap {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    top: 80%;
+    background-color: #CCDDFF;
+    z-index: 10;
+    opacity: 1;
+}
+.ratingval {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+}
+.ratingval.positive {
+    background-color: #FF0000;
+}
+.ratingval.negative {
+    background-color: #000000;
+}
+.ratingval20 {
+    width: 20%;
+}
+.ratingval40 {
+    width: 40%;
+}
+.ratingval60 {
+    width: 60%;
+}
+.ratingval80 {
+    width: 80%;
+}
+.ratingval100 {
+    width: 100%;
 }
 
 .layout-transparent {
@@ -41,4 +79,40 @@ body md-select-menu, body md-content{
 }
 md-option {
     height: 7vh;
+}
+.mdl-layout__drawer-button {
+    display: none;
+}
+.hamburger-helper {
+    height: 28px;
+    font-size: 14px;
+    width: 28px;
+    top: 7px;
+    left: 7px;
+    position: absolute;
+}
+.hamburger-helper span, .hamburger-helper span:after,  .hamburger-helper span:before {
+    background-color: #FFFFFF;
+}
+.hamburger-helper span {
+    height: 0.3em; 
+}
+.layout-title {
+    display: block;
+    height: 42px;
+    margin-left: 42px;
+    padding-top: 11px;
+}
+.mainspace {
+    height: calc(100vh - 220px);
+    margin-bottom: 25px;
+}
+i.positive {
+    color: #CC0000;
+}
+i.neutral {
+    color: #CCCCCC;
+}
+i.negative {
+    color: #000000;
 }

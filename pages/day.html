@@ -1,0 +1,37 @@
+
+<a home-link ng-click="menuarrow = !menuarrow" ng-init="menuarrow = true">
+  <ng-hamburger-helper arrow-when="menuarrow"></ng-hamburger-helper>
+</a>
+<div class="container layout-title">{{'DAY_DETAIL' | translate}}</div>
+<div class="page-content">
+  <div class="container">
+    <div class="mainspace">
+      <div layout="row" layout-align="center center" flex>
+        <a href="#/day/{{previous | date:'yyyy-MM-dd'}}"><i class="large material-icons">skip_previous</i></a>
+        <h4 flex layout="row" layout-align="center center">{{date}}</h4>
+        <a href="#/day/{{next | date:'yyyy-MM-dd'}}"><i class="large material-icons">skip_next</i></a>
+      </div>
+      <i ng-repeat="starClass in starClasses track by $index"  class="large material-icons {{starClass}}">star</i>
+
+      <br />day rating: {{ratingValue}}<br />{{$s}}
+    </div>
+
+    <div>
+      <md-select ng-model="selectedActivity" ng-change="activitySelect(selectedActivity)">
+        <md-option value="any">{{'ANY_ACTIVITY' | translate}}</md-option>
+        <md-optgroup label="{{currentGroup | translate}}" ng-repeat="currentGroup in groupList">
+          <md-option ng-value="activity" ng-repeat="activity in activities | filter: {group: currentGroup}">{{activity.name | translate}}</md-option>
+        </md-optgroup>
+      </md-select>
+    </div>
+
+    <div>
+      <md-select ng-model="selectedPerson" ng-change="personSelect(selectedPerson)">
+        <md-option value="generaly">{{'DAY_GENERALY' | translate}}</md-option>
+        <md-option ng-value="key" ng-repeat="(key, person) in personlist">{{person.name}}</md-option>
+        <md-option value="add">{{'ADD_PERSON' | translate}}</md-option>
+      </md-select>
+    </div>
+  </div>
+</div>
+

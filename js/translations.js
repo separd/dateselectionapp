@@ -51,8 +51,10 @@ var $tranlationEN = {
     'installation-of-interior-doors': '',
     'installation-of-water-features': '',
 
+    ANY_ACTIVITY: 'Any activity',
     DAY_GENERALY: 'Day generaly',
     ADD_PERSON: 'Add person',
+    DAY_DETAIL: 'Day detail',
 
     NAME: 'Name',
     DATE_DAY: 'Date',
@@ -116,8 +118,10 @@ var $tranlationSK = {
     'installation-of-interior-doors': 'Inštalovanie dverí do interiéru',
     'installation-of-water-features': 'Inštalovanie vodných prvkov',
 
+    ANY_ACTIVITY: 'Akákoľvek aktivita',
     DAY_GENERALY: 'Deň všeobecne',
     ADD_PERSON: 'Pridať osobu',
+    DAY_DETAIL: 'Detail dňa',
 
     NAME: 'Meno',
     DATE_DAY: 'Deň',

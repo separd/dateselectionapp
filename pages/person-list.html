@@ -1,3 +1,8 @@
+<a home-link ng-click="menuarrow = !menuarrow" ng-init="menuarrow = true">
+      <ng-hamburger-helper arrow-when="menuarrow"></ng-hamburger-helper>
+</a>
+<div class="container layout-title">MY PERSON LIST</div>
+
 <div class="page-content" style="min-height: calc(100vh - 100px)">
 	<div class="container">
 		<md-list-item class="md-2-line"  ng-repeat="(key, person) in personlist">
