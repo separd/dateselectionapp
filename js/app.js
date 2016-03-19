@@ -169,7 +169,7 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     }
 
     $scope.setDayContent = function(date) {
-        activity = ($scope.selectedActivity == 'any')?  $scope.selectedActivity.name : null;
+        activity = ($scope.selectedActivity != 'any')? $scope.selectedActivity.name : null;
         dayData = $astro.getRating(date, activity);
         return getDayHtml(dayData);
         /*if (!$scope.selectedActivity) {
@@ -235,11 +235,11 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     }
 
     date = new Date($scope.date + ' 00:00:00');
-    activity = ($scope.selectedActivity == 'any')? null : $scope.selectedActivity;
+    activity = ($scope.selectedActivity != 'any')?  $scope.selectedActivity.name : null;
 
     next = new Date($scope.date + ' 00:00:00').setDate(date.getDate() + 1);
     previous = new Date($scope.date + ' 00:00:00').setDate(date.getDate() - 1);
-    
+
     dayData = $astro.getRating(date, activity);
 
     stars = $astro.getStars(dayData.rating);

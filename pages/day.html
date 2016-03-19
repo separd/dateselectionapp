@@ -5,12 +5,23 @@
 <div class="container layout-title">{{'DAY_DETAIL' | translate}}</div>
 <div class="page-content">
   <div class="container">
-    <div class="mainspace">
-      <div layout="row" layout-align="center center" flex>
-        <a href="#/day/{{previous | date:'yyyy-MM-dd'}}"><i class="large material-icons">skip_previous</i></a>
-        <h4 flex layout="row" layout-align="center center">{{date}}</h4>
-        <a href="#/day/{{next | date:'yyyy-MM-dd'}}"><i class="large material-icons">skip_next</i></a>
-      </div>
+    <div class="mainspace" layout-fill md-swipe-left="locateTo('#/day/{{next | date:'yyyy-MM-dd'}}')" md-swipe-right="locateTo('#/day/{{previous | date:'yyyy-MM-dd'}}')">
+        <md-toolbar>
+          <div class='md-toolbar-tools' layout='row'>
+            <md-button class='md-icon-button' href="#/day/{{previous | date:'yyyy-MM-dd'}}" aria-label='Previous month'>
+              <md-tooltip ng-if='::tooltips()'>Previous month</md-tooltip>&laquo;
+            </md-button>
+            <div flex></div>
+            <h2 class='calendar-md-title'>
+              <span>{{ date | date:'d':timezone }}. {{ date | date:'MMMM':timezone | translate}} {{ date | date:'yyyy':timezone }}</span>
+            </h2>
+            <div flex></div>
+            <md-button class='md-icon-button' href="#/day/{{next | date:'yyyy-MM-dd'}}" aria-label='Next month'>
+              <md-tooltip ng-if='::tooltips()'>Next month</md-tooltip>&raquo;
+            </md-button>
+          </div>
+        </md-toolbar>
+      <br /><br />
       <i ng-repeat="starClass in starClasses track by $index"  class="large material-icons {{starClass}}">star</i>
 
       <br />day rating: {{ratingValue}}<br />{{$s}}
