@@ -1,12 +1,13 @@
-var app = angular.module("ngAstro", []);
+var app = angular.module("ngAstro", ['ngAstroSource', 'ngDaGua']);
 
-app.factory("$astro", function($rootScope, $filter) {return {
+app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
+
+    getActivities: function() {
+        return $source.activities;
+    },
 
     setDateTable: function(d) {
         var dateTable = {year:{}, month:{}, day:{}};
-
-        dateTable.year.stem = (this.chineDateNum(d, 'year') + 6) % 10;
-        dateTable.year.branch = (this.chineDateNum(d, 'year') + 8) % 12;
 
         dateTable.year.stem = (this.chineDateNum(d, 'year') + 6) % 10;
         dateTable.year.branch = (this.chineDateNum(d, 'year') + 8) % 12;
@@ -23,13 +24,22 @@ app.factory("$astro", function($rootScope, $filter) {return {
         return dateTable;
     },
 
+    setDateTableHour: function(d, $h) {
+        $hDiff = ($h < 3)? 17 : (($h < 23)? -3 : -23);
+        $byHour = Math.floor(($h + $hDiff) / 2);
+        $stem =  $byHour - (4 - (Math.floor(d.getTime() / 86400000) + 3) % 5) * 2;
+        if ($stem < 0) $stem += 10;
+        $branch = ($h > 22)? 0 : Math.floor(($h + 1)/2);
+        return [$stem, $branch];
+    },
+
     day28: function(d) {
         d28 = (Math.floor(d.getTime() / 86400000) + 8) % 28 + 1;
         return d28;
     },
 
     getEffect28: function(d, actName) {
-        activity = $filter('filter')(activities, {name: actName})[0];
+        activity = $filter('filter')($source.activities, {name: actName})[0];
         d28 = this.day28(d);
         effect = activity['effect'][d28-1];
         return effect;
@@ -40,10 +50,10 @@ app.factory("$astro", function($rootScope, $filter) {return {
         euroMonth   = d.getMonth();
         euroDay     = d.getDate();
         
-        yearSource = $filter('filter')(yearMonthArray, {year: euroYear});
+        yearSource = $filter('filter')($source.yearMonthArray, {year: euroYear});
         if (yearSource.length < 1 || yearSource[0]['months'].length < 12) {
             subyear = (euroYear < 2000)? 1900 : 2050;
-            yearSource = $filter('filter')(yearMonthArray, {year: subyear});
+            yearSource = $filter('filter')($source.yearMonthArray, {year: subyear});
         }
         yearArray = yearSource[0]['months'];
 
@@ -66,7 +76,7 @@ app.factory("$astro", function($rootScope, $filter) {return {
     },
 
     getOfficer: function(d, actName) {
-        activity = $filter('filter')(activities, {name: actName})[0];
+        activity = $filter('filter')($source.activities, {name: actName})[0];
         months = this.chineDateNum(d);
         days = Math.floor(d.getTime() / 86400000) + 4;
         officerDay = (days - months) % 12;
@@ -74,19 +84,31 @@ app.factory("$astro", function($rootScope, $filter) {return {
         return officer;
     },
 
-    getRating: function(d, actName) {
+    getRating: function(d, actName, person) {
         var dateTable = this.setDateTable(d);
 
         dayRating = 0;
         dayFilter = 0;
 
         dayRating += this.getGongDong(dateTable);
-
         dayRating += this.getSansSha(dateTable);
-        
         dayRating += this.getSpecialQuality(d);
-
         dayRating += this.getStemCompatibility(dateTable.day.stem, dateTable.month.stem);
+        dayRating += this.getBranchCompatibility(dateTable.day.branch, dateTable.month.branch, 0);
+        dayRating += this.getStemCompatibility(dateTable.day.stem, dateTable.year.stem);
+        dayRating += this.getBranchCompatibility(dateTable.day.branch, dateTable.year.branch, 1);
+        dayRating += this.getBranchCompatibility(dateTable.month.branch, dateTable.year.branch, 2);
+
+        if (person) {
+            bornDate = new Date(person);
+            var bornTable = this.setDateTable(bornDate);
+
+            dayRating += this.getStemCompatibility(bornTable.year.stem, dateTable.day.stem);
+            dayRating += this.getBranchCompatibility(bornTable.year.branch, dateTable.day.branch, 2);
+        }
+
+        hexagrams = this.getHexagrams(dateTable, bornTable);
+        dayRating += $dagua.getRating(hexagrams);
 
         if (actName) {
             effect28    = this.getEffect28(d, actName)
@@ -99,13 +121,37 @@ app.factory("$astro", function($rootScope, $filter) {return {
         return {rating: dayRating, filter: dayFilter};
     },
 
+    getRatingForHours: function(d, actName, person) {
+        var dateTable = this.setDateTable(d);
+        if (person) {
+            bornDate = new Date(person);
+            var bornTable = this.setDateTable(bornDate);
+        }
+        var $hourData = [];
+        for ($h=0; $h<24; $h+=2) {
+            dayRating = 0;
+
+            $hourTable = this.setDateTableHour(d, $h);
+            dateTable['hour'] = {};
+            dateTable['hour']['stem'] = $hourTable[0];
+            dateTable['hour']['branch'] = $hourTable[1];
+            
+            hexagrams = this.getHexagrams(dateTable, bornTable);
+            dayRating += $dagua.getRating(hexagrams);
+            $hourData.push(dayRating);
+            $hourData.push(dayRating);
+        }
+        return $hourData;
+        
+    },
+
     getGongDong: function(dateTable) {
 
-        monthBranch = branches[dateTable['month']['branch']];
-        dayBranch   = branches[dateTable['day']['branch']];
-        dayStem     = stems[dateTable['day']['stem']];
+        monthBranch = $source.branches[dateTable['month']['branch']];
+        dayBranch   = $source.branches[dateTable['day']['branch']];
+        dayStem     = $source.stems[dateTable['day']['stem']];
 
-        rating = dongGongRating[dongGongDefinition[monthBranch][dayBranch][dayStem]];
+        rating = $source.dongGongRating[$source.dongGongDefinition[monthBranch][dayBranch][dayStem]];
         return rating;
     },
 
@@ -142,13 +188,13 @@ app.factory("$astro", function($rootScope, $filter) {return {
         rating = 0;
         testDateStr = $filter('date')(d, 'dd.MM.yyyy');
         
-        if (specialQuality.extictDay.indexOf(testDateStr) !== -1) {
+        if ($source.specialQuality.extictDay.indexOf(testDateStr) !== -1) {
             rating -= 4;
         }
-        if (specialQuality.separatingDay.indexOf(testDateStr) !== -1) {
+        if ($source.specialQuality.separatingDay.indexOf(testDateStr) !== -1) {
             rating -= 4;
         }
-        if (specialQuality.tenBadDays.indexOf(testDateStr) !== -1) {
+        if ($source.specialQuality.tenBadDays.indexOf(testDateStr) !== -1) {
             rating -= 4;
         }
 
@@ -156,17 +202,56 @@ app.factory("$astro", function($rootScope, $filter) {return {
     },
 
     getStemCompatibility: function(stem1, stem2) {
-
         rating = 0;
-        if (stem2 == stemCompatibility.combination[stem1]) {
+        if (stem2 == $source.stemCompatibility.combination[stem1]) {
             rating = 2;
-        } else if (stem2 == stemCompatibility.counter[stem1]) {
+        } else if (stem2 == $source.stemCompatibility.counter[stem1]) {
             rating = -1;
-        } else if (stem2 == stemCompatibility.clash[stem1]) {
+        } else if (stem2 == $source.stemCompatibility.clash[stem1]) {
             rating = -1;
         }
 
         return rating;
+    },
+
+    getBranchCompatibility: function(branch1, branch2, type) {
+
+        rating = 0;
+        brachCompatibility = $source.branchCompatibility[branch1][branch2];
+        if (brachCompatibility != null) {
+            compatibilities = brachCompatibility.split('|');
+            for (i=0; i<compatibilities.length; i++) {
+                rating += $source.branchCompatibilityRating[compatibilities[i]][type];
+            }
+        }
+
+        return rating;
+    },
+
+    getHexagrams: function(dateTable, bornTable){
+        allhexagrams = [];
+        angular.forEach($source.hexagrams, function(value, key) {
+            hexa1 = {};
+            for (i=0; i<$source.hexagramKeys.length; i++) {
+                hexa1[$source.hexagramKeys[i]] = value[i];
+            }
+            hexa1['id'] = key;
+            allhexagrams[key] = hexa1;
+        });
+
+        hexagrams = {};
+        angular.forEach(dateTable, function(value, key) {
+            stem     = $source.stems[dateTable[key]['stem']];
+            branch   = $source.branches[dateTable[key]['branch']];
+            hexagrams[key] = $filter('filter')(allhexagrams, {stem: stem, branch: branch});
+        });
+
+        if (bornTable) {
+            stem     = $source.stems[bornTable['year']['stem']];
+            branch   = $source.branches[bornTable['year']['branch']];
+            hexagrams['person'] = $filter('filter')(allhexagrams, {stem: stem, branch: branch});
+        }
+        return hexagrams;
     },
 
     getStars: function(rating) {

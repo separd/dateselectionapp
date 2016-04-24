@@ -5,7 +5,7 @@
 <div class="container layout-title">{{'DAY_DETAIL' | translate}}</div>
 <div class="page-content">
   <div class="container">
-    <div class="mainspace" layout-fill md-swipe-left="locateTo('#/day/{{next | date:'yyyy-MM-dd'}}')" md-swipe-right="locateTo('#/day/{{previous | date:'yyyy-MM-dd'}}')">
+    <div layout-fill md-swipe-left="locateTo('#/day/{{next | date:'yyyy-MM-dd'}}')" md-swipe-right="locateTo('#/day/{{previous | date:'yyyy-MM-dd'}}')">
         <md-toolbar>
           <div class='md-toolbar-tools' layout='row'>
             <md-button class='md-icon-button' href="#/day/{{previous | date:'yyyy-MM-dd'}}" aria-label='Previous month'>
@@ -21,10 +21,15 @@
             </md-button>
           </div>
         </md-toolbar>
-      <br /><br />
-      <i ng-repeat="starClass in starClasses track by $index"  class="large material-icons {{starClass}}">star</i>
+      <div class="dayinfo">
+          <i ng-repeat="starClass in starClasses track by $index"  class="large material-icons {{starClass}}">star</i>
 
-      <br />day rating: {{ratingValue}}<br />{{$s}}
+          <br />day rating: {{ratingValue}}<br />{{$s}}
+      </div>
+        <div ng-repeat="$rating in hours track by $index" layout="row" class="hourrow">
+            <div class="hourtitle" flex><strong>{{($index>9)? '' : '0'}}{{$index}}:00</strong> - {{($index>9)? '' : '0'}}{{$index}}:59</div>
+            <div flex>rating: {{$rating}}</div>
+        </div>
     </div>
 
     <div>

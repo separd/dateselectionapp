@@ -1,10 +1,14 @@
-var stems          = ['Jia', 'Yi', 'Bing', 'Ding', 'Wu', 'Ji', 'Geng', 'Xin', 'Ren', 'Gui'];
-var stemElemnts    = ['wood', 'wood', 'fire', 'fire', 'earth', 'earth', 'metal', 'metal', 'water', 'water'];
-            
-var branches       = ['Zi', 'Chou', 'Yin', 'Mao' , 'Chen', 'Si', 'Wu', 'Wei', 'Shen', 'You', 'Xu', 'Hai'];
-var branchElements = ['water', 'earth', 'wood', 'wood', 'earth', 'fire', 'fire', 'earth', 'metal', 'metal', 'earth', 'water'];
+var app = angular.module("ngAstroSource", []);
 
-var yearMonthArray = [
+app.factory("$source", function() {return {
+
+      stems:            ['Jia', 'Yi', 'Bing', 'Ding', 'Wu', 'Ji', 'Geng', 'Xin', 'Ren', 'Gui'],
+      stemElemnts:      ['wood', 'wood', 'fire', 'fire', 'earth', 'earth', 'metal', 'metal', 'water', 'water'],
+                  
+      branches:         ['Zi', 'Chou', 'Yin', 'Mao' , 'Chen', 'Si', 'Wu', 'Wei', 'Shen', 'You', 'Xu', 'Hai'],
+      branchElements:   ['water', 'earth', 'wood', 'wood', 'earth', 'fire', 'fire', 'earth', 'metal', 'metal', 'earth', 'water'],
+
+      yearMonthArray: [
             {year: 1900, months:[4,6,5,6,6,7,8,8,9,8,7,6]},
             {year: 1901, months:[4,6,6,6,6,8,8,8,9,8,8,6]},
             {year: 1902, months:[5,6,6,6,7,8,8,8,9,8,8,6]},
@@ -157,9 +161,9 @@ var yearMonthArray = [
             {year: 2049, months:[3,5,4,5,5,6,7,7,8,7,7,5]},
             {year: 2050, months:[3,5,4,5,5,7,7,7,8,7,7,5]},
             {year: 2051, months:[4]},
-        ];
+        ],
 
-	var activities = [
+	activities: [
 		{group: 'job-public-affairs', id:1, name: 'start-new-job',
             effect: [1,-2, 0, 0, 0, 2, 0,-2,-2, 2,-2,-2, 2, 2, 0, 2, 2,-2, 0,-2, 0, 1,-2,-2, 2, 2,-2, 2],
             officer: [1, 0, 3, 2, 3, 2,-3,-2, 3, 0, 3,-3]},
@@ -259,9 +263,9 @@ var yearMonthArray = [
         {group: 'feng-shui-activity', id:33, name: 'installation-of-water-features',
             effect: [0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 2,-2, 0, 0, 0, 0, 2,-2, 0, 0, 0, 2, 0,-2, 0, 2, 0, 0],
             officer: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
-	];
+	],
 
-    var dongGongDefinition = {
+      dongGongDefinition: {
             'Yin': {
                     'Yin': {
                             Jia: 1,
@@ -1294,12 +1298,12 @@ var yearMonthArray = [
                             Ren: 1,
                         },
                 },
-    };
+      },
 
-var dongGongRating = [0, -2, 2, 0, -4, 4];
+      dongGongRating: [0, -2, 2, 0, -4, 4],
 
-var specialQuality = {
-      extictDay: [
+      specialQuality: {
+            extictDay: [
                   '06.08.2013',
                   '06.11.2013',
                   '03.02.2014',
@@ -1964,10 +1968,235 @@ var specialQuality = {
                   '19.10.2050',
                   '18.12.2050'
             ]
-}
+      },
 
-var stemCompatibility = {
-      'combination'     : [5, 6, 7, 8, 9, 0, 1, 2, 3, 4],
-      'counter'         : [4, 5, 6, 7, 8, 9, 0, 1, 2, 3],
-      'clash'           : [6, 7, 8, 9, 99,99,0, 1, 2, 3]
-};
+      stemCompatibility: {
+            'combination'     : [5, 6, 7, 8, 9, 0, 1, 2, 3, 4],
+            'counter'         : [4, 5, 6, 7, 8, 9, 0, 1, 2, 3],
+            'clash'           : [6, 7, 8, 9, 0, 1, 2, 3, 4, 5]
+      },
+
+      branchCompatibility: [
+            [null, '6-harm', null, 'nesp-t', '3-harm', null, '6-konfl', '6-dish-k', '3-harm', 'destr', null, null],
+            ['6-harm', null, null, null, 'destr', '3-harm', '6-dish-k', '6-konfl|sikan', null, '3-harm', 'sikan', null],
+            [null, null, null, null, null, 'nevd-t|6-dish-k', '3-harm', null, '6-konfl|nevd-t', null, '3-harm', '6-harm|destr'],
+            ['nesp-t', null, null, null, '6-dish-k', null, 'destr', '3-harm', null, '6-konfl', '6-harm', '3-harm'],
+            ['3-harm', 'destr', null, '6-dish-k','sebatr', null, null, null, '3-harm', '6-harm', '6-konfl', null],
+            [null, '3-harm', 'nevd-t|6-dish-k', null, null, null, null, null, '6-harm|nevd-t|destr', '3-harm', null, '6-konfl'],
+            ['6-konfl', '6-dish-k', '3-harm', 'destr', null, null, 'sebatr', '6-harm', null, null, '3-harm', null],  
+            ['6-dish-k', '6-konfl|sikan', null, '3-harm', null, null, '6-harm', null, null, null, 'sikan|destr', '3-harm'], 
+            ['3-harm', null, '6-konfl|nevd-t', null, '3-harm', '6-harm|nevd-t|destr', null, null, null, null, null, '6-dish-k'],
+            ['destr', '3-harm', null, '6-konfl', '6-harm', '3-harm', null, null, null, 'sebatr', '6-dish-k', null],
+            [null, 'sikan', '3-harm', '6-harm', '6-konfl', null, '3-harm', 'sikan', null, '6-dish-k', null, null],
+            [null, null, '6-harm|destr', '3-harm', null, '6-konfl', null, '3-harm', '6-dish-k', null, null, 'sebatr']
+      ],
+
+      branchCompatibilityRating: {
+            '6-harm': [3, 3, 0, 3],
+            '3-harm': [3, 3, 0, 3],
+            '6-konfl': [-5, -4, -2, -8],
+            'nesp-t': [-1, -1, 0, -1],
+            '6-dish-k': [-2, -2, 0, -2],
+            'destr': [-2, -2, 0, -2],
+            'sikan': [-1, -1, 0, -1],
+            'nevd-t': [-1, -1, 0, -1],
+            'sebatr': [-1, -1, 0, -1]
+      },
+
+      hexagrams: [
+            {},
+            ['111111','QIAN',1,9,9, ['Qian, Kun'],'father','metal',0,'Jia','wood','Wu','fire','metal',174.375,180.000, 'V, Z, S'],
+            ['000000','KUN',1,1,1,  ['Qian, Kun'],'muther','water',0,'Jia','wood','Zi','water','metal',354.375,360.000, 'JV, J, SV'],
+            ['010001','TUN',4,7,8,  ['Ji Ji, Wei Ji ','Heng Yi'],'son,daughter','fire',4,'Wu','earth','Zi','water','fire',11.250,16.875, 'JV, SZ, SV'],
+            ['100010','MENG',2,6,7,  ['Ji Ji, Wei Ji','Sun, Xian'],'daughter,son','water',3,'Geng','metal','Shen','metal','wood',258.750,264.375, 'V, JZ, Z'],
+            ['010111','XU',3,7,9,  ['Pi Tai','Ji Ji, Wei Ji'],'daughter,son','fire',6,'Yi','wood','Si','fire','fire',146.250,151.875, 'JV, J, SV'],
+            ['111010','SONG',3,9,7,  ['Pi Tai','Ji Ji, Wei Ji'],'son,daughter','metal',5,'Xin','metal','Wei','earth','earth',225.000,230.625, 'V, JZ, Z'],
+            ['000010','SHI',7,1,7,  ['Qian, Kun','Kan, Li'],'daughter,son','water',8,'Ren','water','Shen','metal','metal',264.375,270.000, 'JV, SZ, SV'],
+            ['010000','BI',7,7,1,  ['Qian, Kun','Kan, Li'],'daughter,son','fire',7,'Xin','metal','Hai','water','metal',343.125,348.750, 'JV, J, SV'],
+            ['110111','XIAO XU',8,2,9,  ['Qian, Kun','Zhen, Xun'],'son,daughter','fire',10,'Ding','fire','Si','fire','earth',151.875,157.500, 'JZ, Z, S'],
+            ['111011','LU',6,9,4,  ['Qian, Kun','Gen, Dui'],'son,daughter','metal',9,'Wu','earth','Chen','earth','wood',129.375,135.000, 'V, JZ, S'],
+            ['000111','TAI',9,1,9,  ['Pi Tai'],'muther','water',12,'Geng','metal','Chen','earth','metal',135.000,140.625, 'JV, J, SV'],
+            ['111000','PI',9,9,1,  ['Pi Tai'],'father','metal',11,'Geng','metal','Xu','earth','metal',315.000,320.625, 'V, Z, S'],
+            ['111101','TONG REN',7,9,3,  ['Qian, Kun','Kan, Li'],'son,daughter','metal',14,'Ren','water','Yin','wood','metal',84.375,90.000, 'V, JZ, Z'],
+            ['101111','DA YOU',7,3,9,  ['Qian, Kun','Kan, Li'],'son,daughter','wood',13,'Xin','metal','Si','fire','metal',163.125,168.750, 'V, Z, S'],
+            ['000100','LIAN',6,1,6,  ['Qian, Kun','Gen, Dui'],'daughter,son','water',16,'Wu','earth','Xu','earth','wood',309.375,315.000, 'JV, J, SZ'],
+            ['001000','YU',8,8,1,  ['Qian, Kun','Zhen, Xun'],'daughter,son','wood',15,'Ding','fire','Hai','water','earth',331.875,337.500, 'J, SZ, SV'],
+            ['011001','SUI',7,4,8,  ['Zhen, Xun','Gen, Dui'],'son,daughter','metal',18,'Ding','fire','Chou','earth','water',33.750,39.375, 'J, SZ, SV'],
+            ['100110','GU',7,6,2,  ['Zhen, Xun','Gen, Dui'],'daughter,son','water',17,'Ding','fire','Wei','earth','water',213.750,219.375, 'JZ, Z, S'],
+            ['000011','LI',4,1,4,  ['Pi Tai','Sun, Xian'],'daughter,son','water',20,'Yi','wood','Mao','wood','water',90.000,95.625, 'JV, J, SV'],
+            ['110000','GUAN',2,2,1,  ['Pi Tai','Heng Yi'],'son,daughter','fire',19,'Ji','earth','Hai','water','wood',337.500,343.125, 'V, Z, S'],
+            ['101001','SHI KE',6,3,8,  ['Zhen, Xun','Kan, Li'],'son,daughter','wood',22,'Yi','wood','Chou','earth','metal',28.125,33.750, 'JZ, Z, S'],
+            ['100101','BI',8,6,3,  ['Kan, Li','Gen, Dui'],'daughter,son','water',21,'Gui','water','Chou','earth','wood',50.625,56.250, 'V, JZ, S'],
+            ['100000','BO',6,6,1,  ['Qian, Kun','Gen, Dui'],'daughter,son','water',24,'Gui','water','Hai','water','water',348.750,354.375, 'V, Z, S'],
+            ['000001','FU',8,1,8,  ['Zhen, Xun','Qian, Kun'],'son,daughter','water',23,'Jia','wood','Zi','water','metal',0.000,5.625, 'JV, J, SV'],
+            ['111001','WU WANG',2,9,8,  ['Pi Tai','Heng Yi'],'son,daughter','metal',26,'Ji','earth','Chou','earth','fire',39.375,45.000, 'JZ, Z, S'],
+            ['100111','DA XU',4,6,9,  ['Pi Tai','Sun, Xian'],'daughter,son','water',25,'Ren','water','Chen','earth','water',140.625,146.250, 'V, JZ, S'],
+            ['100001','Yi',3,6,8,  ['Sun, Xian','Heng Yi'],'son,daughter','water',0,'Bing','fire','Zi','water','water',5.625,11.250, 'JZ, Z, S'],
+            ['011110','DA GUO',3,4,2,  ['Heng Yi','Sun, Xian'],'son,daughter','metal',0,'Bing','fire','Wu','fire','water',185.625,191.250, 'J, SZ, SV'],
+            ['010010','KAN',1,7,7,  ['Kan, Li',],'father','fire',0,'Geng','metal','Shen','metal','wood',253.125,258.750, 'JV, SZ, SV'],
+            ['101101','LI',1,3,3,  ['Kan, Li',],'muther','wood',0,'Geng','metal','Yin','wood','wood',73.125,78.750, 'V, JZ, Z'],
+            ['011100','XIAN',9,4,6,  ['Sun, Xian',],'muther','metal',32,'Ding','fire','You','metal','fire',275.625,281.250, 'JV, J, SZ'],
+            ['001110','HENG',9,8,2,  ['Heng Yi',],'father','wood',31,'Geng','metal','Wu','fire','earth',196.875,202.500, 'J, SZ, SV'],
+            ['111100','DUN',4,9,6,  ['Pi Tai','Sun, Xian',],'son,daughter','metal',34,'Yi','wood','You','metal','water',270.000,275.625, 'V, Z, S'],
+            ['001111','DA ZHANG',2,8,9,  ['Pi Tai','Heng Yi',],'daughter,son','wood',33,'Ji','earth','Si','fire','wood',157.500,163.125, 'JV, J, SV'],
+            ['101000','JUN',3,3,1,  ['Pi Tai','Ji Ji, Wei Ji',],'son,daughter','wood',36,'Yi','wood','Hai','water','fire',326.250,331.875, 'V, Z, S'],
+            ['000101','MING YI',3,1,3,  ['Ji Ji, Wei Ji','Pi Tai',],'son,daughter','water',35,'Xin','metal','Chou','earth','earth',45.000,50.625, 'JV, SZ, SV'],
+            ['110101','JIA REN',4,2,3,  ['Ji Ji, Wei Ji','Heng Yi'],'son,daughter','fire',38,'Bing','fire','Yin','wood','fire',61.875,67.500, 'JZ, Z, S'],
+            ['101011','KUI',2,3,4,  ['Ji Ji, Wei Ji','Sun, Xian'],'daughter,son','wood',37,'Jia','wood','Chen','earth','fire',118.125,123.750, 'V, JZ, S'],
+            ['010100','JIAN',2,7,6,  ['Ji Ji, Wei Ji','Sun, Xian'],'son,daughter','fire',40,'Jia','wood','Xu','earth','fire',298.125,303.750, 'JV, J, SZ'],
+            ['001010','JIE',4,8,7,  ['Ji Ji, Wei Ji','Heng Yi'],'daughter,son','wood',39,'Bing','fire','Shen','metal','fire',241.875,247.500, 'J, SZ, SV'],
+            ['100011','SUN',9,6,4,  ['Sun, Xian'],'father','water',42,'Ding','fire','Mao','wood','fire',95.625,101.250, 'V, JZ, S'],
+            ['110001','Yi',9,2,8,  ['Heng Yi'],'muther','fire',41,'Geng','metal','Zi','water','earth',16.875,22.500, 'JZ, Z, S'],
+            ['011111','GUAI',6,4,9,  ['Qian, Kun','Gen, Dui'],'son,daughter','metal',44,'Gui','water','Si','fire','water',168.750,174.375, 'JV, J, SV'],
+            ['111110','GOU',8,9,2,  ['Qian, Kun','Zhen, Xun'],'son,daughter','metal',18,'Jia','wood','Wu','fire','metal',180.000,185.625, 'V, Z, S'],
+            ['011000','CUI',4,4,1,  ['Pi Tai','Sun, Xian'],'son,daughter','metal',46,'Ren','water','Xu','earth','water',320.625,326.250, 'JV, J, SZ'],
+            ['000110','SHENG',2,1,2,  ['Pi Tai','Heng Yi'],'daughter,son','water',45,'Ji','earth','Wei','earth','fire',219.375,225.000, 'J, SZ, SV'],
+            ['011010','KUN',8,4,7,  ['Kan, Li','Gen, Dui'],'son,daughter','metal',48,'Gui','water','Wei','earth','wood',230.625,236.250, 'JV, J, SZ'],
+            ['010110','JING',6,7,2,  ['Kan, Li','Zhen, Xun'],'son,daughter','fire',47,'Yi','wood','Wei','earth','metal',208.125,213.750, 'J, SZ, SV'],
+            ['011101','GE',2,4,3,  ['Ji Ji, Wei Ji','Sun, Xian'],'son,daughter','metal',55,'Geng','metal','Yin','wood','wood',78.750,84.375, 'JV, SZ, SV'],
+            ['101110','DING',4,3,2,  ['Heng Yi','Ji Ji, Wei Ji'],'son,daughter','wood',36,'Wu','earth','Wu','fire','fire',191.250,196.875, 'V, JZ, Z'],
+            ['001001','ZHEN',1,8,8,  ['Zhen, Xun'],'father','wood',52,'Ren','water','Zi','water','wood',22.500,28.125, 'J, SZ, SV'],
+            ['100100','GEN',1,6,6,  ['Gen, Dui'],'father','water',51,'Bing','fire','Xu','earth','earth',303.750,309.375, 'V, JZ, S'],
+            ['110100','JIAN',7,2,6,  ['Zhen, Xun','Gen, Dui'],'daughter,son','fire',54,'Gui','water','You','metal','metal',292.500,298.125, 'V, JZ, S'],
+            ['001011','GUI MEI',7,8,4,  ['Zhen, Xun','Gen, Dui'],'son,daughter','wood',53,'Gui','water','Mao','wood','metal',112.500,118.125, 'JV, J, SZ'],
+            ['001101','FENG',6,8,3,  ['Kan, Li','Zhen, Xun'],'daughter,son','wood',56,'Wu','earth','Yin','wood','earth',67.500,73.125, 'JV, SZ, SV'],
+            ['101100','LU',8,3,6,  ['Kan, Li','Gen, Dui'],'daughter,son','wood',55,'Ji','earth','You','metal','earth',281.250,286.875, 'V, JZ, Z'],
+            ['110110','XUN',1,2,2,  ['Zhen, Xun'],'muther','fire',19,'Ren','water','Wu','fire','wood',202.500,208.125, 'JZ, Z, S'],
+            ['011011','DUI',1,4,4,  ['Gen, Dui'],'muther','metal',57,'Bing','fire','Chen','earth','earth',123.750,129.375, 'JV, J, SZ'],
+            ['110010','HUAN',6,2,7,  ['Zhen, Xun','Kan, Li'],'daughter,son','fire',60,'Wu','earth','Shen','metal','earth',247.500,253.125, 'V, JZ, Z'],
+            ['010011','JIE',8,7,4,  ['Kan, Li','Gen, Dui'],'son,daughter','fire',59,'Ji','earth','Mao','wood','earth',101.250,106.875, 'JV, SZ, SV'],
+            ['110011','ZHONG FU',3,2,4,  ['Heng Yi','Sun, Xian'],'daughter,son','fire',0,'Xin','metal','Mao','wood','wood',106.875,112.500, 'V, JZ, S'],
+            ['001100','XIAO GUO',3,8,6,  ['Sun, Xian','Heng Yi'],'daughter,son','wood',0,'Xin','metal','You','metal','wood',286.875,292.500, 'JV, J, SZ'],
+            ['010101','JI JI',9,7,3,  ['Ji Ji, Wei Ji'],'father','fire',64,'Jia','wood','Yin','wood','water',56.250,61.875, 'JV, SZ, SV'],
+            ['101010','WEI JI',9,3,7,  ['Ji Ji, Wei Ji'],'muther','wood',63,'Jia','wood','Shen','metal','water',236.250,241.875, 'V, JZ, Z']
+      ],
+
+      hexagramKeys: ['hex-bin','name','GuaYun','GuaQi','dolne-gua','blood-link','blood-link-type','hex-elemnt','star7robbery','stem','stem-element','branch','branch-element','NaYin','SectorStart','SectorEnd','outofgua'],
+
+      starsArray: {
+            0: {0: {'ano': {0: [13, 14], 2: [3, 22], 4: [0], 6: [1], 8: [], 10: [], 12: [2], 14: [3], 16: [4], 18: [5], 20: [], 22: []},
+                    'nie': {0: [], 2: [], 4: [6], 6: [7], 8: [8], 10: [9], 12: [10], 14: [11], 16: [12], 18: [12], 20: [19, 18], 22: [18, 20]}},
+                2: {'ano': {0: [4], 2: [3], 4: [13], 6: [], 8: [14], 10: [15], 12: [], 14: [3, 1], 16: [16], 18: [], 20: [13], 22: [17]}}}
+            /*$stars[0][2]["ano"] = );
+            $stars[0][2]["nie"] = array(0=>array(18), 2=>array(18), 4=>array(19), 6=>array(20), 8: [], 10: [11], 12=>array(24, 6), 14: [], 16: [12], 18: [12], 20: [], 22=>array(21));
+            $stars[0][4]["ano"] = array(0: [], 2: [3], 4: [16], 6: [], 8: [13], 10: [17], 12: [], 14: [3], 16: [14], 18=>array(22), 20: [], 22=>array(1));
+            $stars[0][4]["nie"] = array(0: [8], 2: [9], 4=>array(18), 6=>array(21, 11), 8: [7], 10: [], 12=>array(19, 24), 14=>array(20), 16: [12], 18: [12], 20=>array(6, 10), 22: []);
+            $stars[0][6]["ano"] = array(0: [14], 2: [3], 4=>array(23), 6=>array(1), 8: [], 10: [], 12: [13], 14=>array(22), 16: [16], 18=>array(5), 20: [], 22: []);
+            $stars[0][6]["nie"] = array(0: [10], 2: [11], 4: [6], 6: [], 8=>array(8, 18), 10=>array(9, 18), 12=>array(24), 14=>array(21), 16: [12], 18: [12], 20=>array(19), 22=>array(20));
+            $stars[0][8]["ano"] = array(0: [4], 2=>array(3, 17), 4=>array(23), 6: [], 8: [14], 10=>array(22, 15), 12: [], 14: [3], 16: [13], 18=>array(5), 20=>array(2), 22: []);
+            $stars[0][8]["nie"] = array(0: [], 2: [], 4: [10], 6=>array(20), 8: [], 10: [], 12=>array(6, 24), 14=>array(18), 16: [12], 18: [12], 20: [], 22=>array(21, 11));
+            $stars[0][10]["ano"] = array(0: [], 2: [3], 4=>array(23, 0), 6=>array(22), 8: [4], 10: [17], 12: [], 14: [3], 16: [16], 18=>array(5), 20: [4], 22=>array(1));
+            $stars[0][10]["nie"] = array(0: [8], 2: [9], 4: [], 6=>array(21), 8: [10], 10: [], 12=>array(19, 24), 14: [7], 16: [12], 18=>array(18), 20: [6], 22: []);
+            $stars[1][1]["ano"] = array(0: [3], 2: [13], 4: [14], 6=>array(23, 15), 8: [], 10=>array(1), 12: [], 14: [], 16=>array(3, 5), 18: [], 20=>array(0), 22=>array(25));
+            $stars[1][1]["nie"] = array(0=>array(19), 2=>array(20), 4: [], 6: [], 8: [6], 10=>array(24), 12=>array(8, 11), 14=>array(12, 10), 16: [], 18=>array(21), 20=>array(18), 22=>array(18));
+            $stars[1][3]["ano"] = array(0: [3], 2=>array(25), 4: [4], 6=>array(13, 17), 8: [], 10: [16], 12: [14], 14: [15], 16: [3], 18=>array(1), 20=>array(22), 22=>array(25));
+            $stars[1][3]["nie"] = array(0: [7], 2=>array(18), 4: [], 6: [], 8=>array(11, 19), 10=>array(24), 12: [12], 14: [12], 16: [6], 18: [10], 20: [8], 22=>array(9));
+            $stars[1][5]["ano"] = array(0: [3], 2=>array(25, 1), 4: [], 6=>array(23), 8=>array(2), 10: [13], 12: [4], 14: [13], 16=>array(22), 18: [], 20=>array(0, 14), 22: [15]);
+            $stars[1][5]["nie"] = array(0: [6], 2: [], 4=>array(8, 11), 6=>array(18), 8: [], 10=>array(24), 12: [12], 14: [12], 16: [7], 18=>array(20), 20: [], 22=>array(10));
+            $stars[1][7]["ano"] = array(0: [3], 2=>array(25), 4: [14], 6=>array(23, 15), 8: [], 10: [16], 12=>array(22), 14: [13], 16=>array(5, 2), 18: [], 20=>array(4, 0), 22=>array(17, 25));
+            $stars[1][7]["nie"] = array(0: [11], 2: [7], 4: [], 6: [], 8=>array(18, 6), 10=>array(24), 12: [12], 14: [12], 16: [], 18=>array(21), 20: [], 22: []);
+            $stars[1][9]["ano"] = array(0=>array(3, 2), 2=>array(25), 4: [4], 6: [17], 8=>array(22), 10: [], 12: [14], 14: [15], 16=>array(5), 18: [13], 20=>array(0), 22=>array(25));
+            $stars[1][9]["nie"] = array(0: [], 2=>array(21), 4: [], 6: [10], 8=>array(19), 10=>array(24, 20), 12: [12], 14: [12], 16: [6], 18: [7], 20: [8], 22=>array(9));
+            $stars[1][11]["ano"] = array(0: [3], 2=>array(25, 1), 4=>array(22), 6=>array(23), 8=>array(2), 10: [16], 12: [4], 14: [17], 16=>array(5), 18: [], 20=>array(0, 14), 22: [13]);
+            $stars[1][11]["nie"] = array(0: [6], 2: [], 4: [8], 6: [9], 8: [], 10: [10], 12: [12], 14: [12], 16=>array(18), 18: [18, 20], 20: [], 22=>array(7));
+            $stars[2][2]["ano"] = array(0=>array(5, 25), 2: [17], 4: [13], 6: [], 8: [14], 10=>array(0), 12: [], 14=>array(1), 16=>array(0), 18: [3], 20=>array(25), 22: [3]);
+            $stars[2][2]["nie"] = array(0: [], 2: [], 4=>array(19), 6=>array(26), 8: [12], 10: [12], 12: [6], 14: [], 16: [10], 18: [9], 20=>array(18), 22=>array(18));
+            $stars[2][4]["ano"] = array(0=>array(5), 2: [], 4=>array(16, 2), 6: [], 8: [13], 10=>array(23), 12: [], 14: [], 16=>array(0, 14), 18=>array(3, 22), 20=>array(25), 22: [3, 1]);
+            $stars[2][4]["nie"] = array(0: [8], 2=>array(18, 9), 4: [], 6=>array(11, 21), 8: [12], 10: [12], 12=>array(19), 14=>array(20), 16: [], 18: [], 20: [10], 22: []);
+            $stars[2][6]["ano"] = array(0=>array(5), 2: [15], 4: [], 6=>array(1), 8: [], 10=>array(23), 12: [13], 14=>array(22), 16=>array(0, 16), 18=>array(3, 17), 20=>array(25), 22: [3]);
+            $stars[2][6]["nie"] = array(0: [10], 2: [11], 4=>array(18, 6), 6=>array(18), 8=>array(24, 12), 10: [12], 12: [7], 14=>array(21), 16: [], 18: [], 20=>array(19), 22=>array(20));
+            $stars[2][8]["ano"] = array(0=>array(5, 25), 2: [17], 4: [16], 6: [], 8: [14], 10=>array(22), 12: [], 14=>array(1), 16: [13], 18: [3], 20=>array(25, 2), 22: [3]);
+            $stars[2][8]["nie"] = array(0: [], 2: [], 4=>array(19), 6=>array(20), 8=>array(24), 10=>array(18), 12: [6], 14: [], 16: [8], 18: [9], 20: [], 22=>array(11));
+            $stars[2][10]["ano"] = array(0=>array(5), 2: [], 4=>array(2), 6=>array(22), 8: [4], 10=>array(23), 12: [], 14: [], 16=>array(0, 16), 18: [3], 20: [13], 22: [3, 1]);
+            $stars[2][10]["nie"] = array(0: [8], 2: [9], 4: [], 6=>array(21), 8: [12], 10: [12], 12: [19, 18], 14=>array(20, 18), 16: [], 18: [11], 20: [6], 22: []);
+            $stars[2][0]["ano"] = array(0=>array(5, 25), 2=>array(22, 15), 4: [16], 6=>array(1), 8: [], 10=>array(23), 12=>array(2), 14: [], 16=>array(0), 18: [3], 20=>array(25), 22: [3]);
+            $stars[2][0]["nie"] = array(0: [], 2: [], 4: [6], 6: [7], 8=>array(12, 24), 10: [12], 12: [10], 14=>array(21, 11), 16=>array(18), 18=>array(18), 20=>array(19), 22=>array(20));
+            $stars[3][3]["ano"] = array(0=>array(2), 2: [], 4: [4], 6: [13], 8: [], 10: [16], 12=>array(0, 23), 14: [15], 16: [], 18: [3], 20=>array(22), 22: [3]);
+            $stars[3][3]["nie"] = array(0: [], 2=>array(21), 4: [12], 6: [12], 8=>array(19, 11), 10=>array(20), 12: [], 14: [], 16: [6], 18: [10], 20=>array(18), 22=>array(18));
+            $stars[3][5]["ano"] = array(0: [], 2=>array(1), 4: [], 6: [], 8=>array(2), 10: [13], 12=>array(23, 0), 14: [17], 16=>array(22), 18: [3], 20: [14], 22=>array(5));
+            $stars[3][5]["nie"] = array(0=>array(18, 6), 2=>array(18), 4=>array(8, 12), 6=>array(12, 24), 8: [], 10=>array(21), 12: [], 14: [], 16=>array(19), 18=>array(20), 20: [], 22=>array(10));
+            $stars[3][7]["ano"] = array(0: [], 2: [], 4: [14], 6: [15], 8: [], 10=>array(16, 1), 12=>array(22), 14: [13], 16=>array(2), 18: [3], 20: [4], 22=>array(3, 17));
+            $stars[3][7]["nie"] = array(0=>array(11, 19), 2=>array(20, 10), 4: [12], 6: [12], 8: [6], 10: [], 12: [8], 14: [9], 16: [], 18=>array(21), 20: [], 22: []);
+            $stars[3][9]["ano"] = array(0=>array(2), 2: [], 4: [4], 6: [17], 8=>array(22), 10: [], 12=>array(23, 0), 14: [15], 16: [], 18: [3], 20: [], 22=>array(5));
+            $stars[3][9]["nie"] = array(0: [], 2=>array(21), 4: [12], 6: [10], 8=>array(19), 10: [18, 20], 12: [], 14: [], 16: [6], 18: [7], 20=>array(8, 11), 22=>array(9));
+            $stars[3][11]["ano"] = array(0: [], 2=>array(1), 4=>array(22), 6: [], 8=>array(2), 10: [16], 12=>array(0), 14: [17], 16: [], 18: [3], 20: [14], 22=>array(5));
+            $stars[3][11]["nie"] = array(0: [6], 2: [], 4: [12], 6=>array(24, 12), 8: [], 10: [10], 12=>array(18), 14=>array(18), 16=>array(11, 19), 18=>array(20), 20: [], 22=>array(7));
+            $stars[3][1]["ano"] = array(0=>array(22), 2: [13], 4: [14], 6: [15], 8: [], 10=>array(1), 12=>array(23), 14: [], 16=>array(2), 18: [3], 20: [4], 22=>array(5, 3));
+            $stars[3][1]["nie"] = array(0=>array(19), 2=>array(20), 4: [12], 6=>array(24), 8: [6], 10: [], 12: [8], 14=>array(10, 9), 16=>array(18), 18=>array(18), 20: [7], 22: []);
+            $stars[4][4]["ano"] = array(0: [], 2: [3], 4=>array(2), 6=>array(5), 8: [13], 10=>array(23, 17), 12: [], 14: [3], 16=>array(25, 14), 18=>array(22, 15), 20: [], 22=>array(1));
+            $stars[4][4]["nie"] = array(0=>array(12, 8), 2: [12], 4=>array(24), 6: [11], 8: [7], 10: [], 12=>array(19), 14=>array(20), 16: [], 18: [], 20=>array(12, 10), 22=>array(12));
+            $stars[4][6]["ano"] = array(0: [14], 2: [3], 4: [], 6=>array(5, 1), 8=>array(0), 10=>array(23), 12: [], 14=>array(22), 16=>array(4, 16), 18: [17], 20: [], 22: []);
+            $stars[4][6]["nie"] = array(0: [10], 2: [12], 4=>array(24, 6), 6: [], 8: [8], 10: [9], 12: [7], 14=>array(21), 16: [], 18: [], 20=>array(12, 19), 22=>array(20, 12));
+            $stars[4][8]["ano"] = array(0: [4], 2: [3], 4: [16], 6=>array(5), 8=>array(14, 0), 10=>array(23, 22), 12: [], 14: [3, 1], 16: [13], 18: [], 20=>array(2), 22: []);
+            $stars[4][8]["nie"] = array(0: [12], 2: [12], 4: [10], 6=>array(20), 8: [], 10: [], 12: [6], 14: [], 16: [8], 18: [9], 20: [12], 22=>array(11, 12));
+            $stars[4][10]["ano"] = array(0: [], 2: [3], 4=>array(2), 6=>array(22), 8=>array(0), 10: [17], 12: [], 14: [3], 16=>array(25, 16), 18: [15], 20: [13], 22: [14]);
+            $stars[4][10]["nie"] = array(0=>array(12, 8), 2: [12], 4=>array(24), 6=>array(21), 8: [10], 10=>array(18), 12=>array(19), 14: [7], 16: [], 18: [11], 20: [12], 22=>array(12));
+            $stars[4][0]["ano"] = array(0: [13], 2=>array(22), 4: [16], 6=>array(5), 8=>array(2), 10=>array(23), 12=>array(2), 14: [3], 16=>array(25, 4), 18: [17], 20: [], 22: []);
+            $stars[4][0]["nie"] = array(0: [12], 2: [12], 4=>array(24), 6: [7], 8: [8], 10: [9], 12=>array(18), 14: [11], 16: [], 18: [], 20=>array(12, 19), 22=>array(20, 12));
+            $stars[4][2]["ano"] = array(0: [4], 2: [3], 4: [13], 6=>array(5), 8=>array(0, 14), 10: [15], 12: [], 14: [3, 1], 16=>array(25), 18: [], 20=>array(2), 22=>array(22));
+            $stars[4][2]["nie"] = array(0: [12], 2: [12], 4=>array(24), 6=>array(20), 8: [], 10: [7], 12: [6], 14: [], 16: [10], 18=>array(18, 9), 20: [12], 22=>array(12));
+            $stars[5][5]["ano"] = array(0: [3], 2=>array(1), 4=>array(5), 6: [], 8=>array(2), 10: [13], 12=>array(23, 4), 14=>array(25, 17), 16=>array(22), 18: [], 20: [14], 22: [16]);
+            $stars[5][5]["nie"] = array(0: [6], 2=>array(24), 4: [8], 6: [9], 8: [], 10=>array(21), 12: [], 14: [], 16: [12], 18=>array(12, 20), 20=>array(18), 22=>array(10));
+            $stars[5][7]["ano"] = array(0: [3], 2: [16], 4=>array(5, 0), 6: [15], 8: [], 10=>array(16, 1), 12=>array(22), 14: [13], 16=>array(2), 18: [], 20: [4], 22: [17]);
+            $stars[5][7]["nie"] = array(0: [11], 2: [10], 4: [], 6: [], 8: [6], 10: [], 12: [8], 14: [9], 16: [12], 18=>array(21, 12), 20: [], 22=>array(24));
+            $stars[5][9]["ano"] = array(0=>array(3, 2), 2: [], 4=>array(5), 6: [17], 8=>array(22), 10: [], 12=>array(23, 14), 14=>array(25, 15), 16: [3], 18: [13], 20: [], 22: [16]);
+            $stars[5][9]["nie"] = array(0: [], 2=>array(24, 21), 4=>array(18), 6=>array(18), 8=>array(19), 10=>array(20), 12: [], 14: [], 16: [12], 18: [12], 20=>array(11, 8), 22=>array(9));
+            $stars[5][11]["ano"] = array(0: [3], 2=>array(1), 4=>array(22), 6: [], 8=>array(2), 10: [16], 12=>array(23, 4), 14=>array(25, 17), 16: [3], 18: [], 20: [14], 22=>array(23));
+            $stars[5][11]["nie"] = array(0: [6], 2=>array(24), 4: [8], 6: [9], 8=>array(18), 10: [10], 12: [], 14: [], 16: [11], 18=>array(20, 12), 20: [], 22=>array(24));
+            $stars[5][1]["ano"] = array(0=>array(22), 2: [13], 4=>array(0, 5), 6: [15], 8: [], 10=>array(1), 12=>array(23), 14=>array(25), 16: [3], 18: [], 20: [4], 22: [16]);
+            $stars[5][1]["nie"] = array(0=>array(19), 2=>array(24), 4: [], 6: [], 8: [6], 10: [], 12: [8], 14: [10], 16: [12], 18=>array(12, 21), 20: [7], 22=>array(24));
+            $stars[5][3]["ano"] = array(0: [3], 2: [], 4=>array(5, 0), 6=>array(13, 17), 8: [], 10: [16], 12=>array(23, 14), 14=>array(15, 25), 16: [3], 18=>array(1), 20=>array(22), 22: []);
+            $stars[5][3]["nie"] = array(0: [7], 2=>array(24, 21), 4: [], 6: [], 8=>array(11, 19), 10=>array(20), 12: [], 14: [], 16=>array(18), 18=>array(18), 20: [8], 22=>array(9, 24));
+            $stars[6][6]["ano"] = array(0: [14], 2: [3], 4: [16], 6=>array(1), 8: [], 10: [], 12=>array(5), 14=>array(22), 16=>array(23, 4), 18: [17], 20=>array(0), 22: []);
+            $stars[6][6]["nie"] = array(0: [10], 2: [11], 4: [6], 6: [], 8: [8], 10: [9], 12: [12], 14: [12], 16: [], 18: [], 20=>array(18), 22: [18, 20]);
+            $stars[6][8]["ano"] = array(0: [4], 2: [3], 4: [16], 6: [3], 8: [14], 10=>array(22, 15), 12=>array(5), 14: [], 16: [13], 18: [], 20=>array(2), 22: []);
+            $stars[6][8]["nie"] = array(0=>array(24), 2=>array(18), 4=>array(19), 6=>array(20), 8: [], 10: [], 12: [6], 14: [12], 16: [8], 18: [9], 20=>array(24), 22=>array(11, 21));
+            $stars[6][10]["ano"] = array(0: [], 2: [3], 4=>array(2), 6=>array(22), 8: [4], 10: [17], 12=>array(5), 14: [3], 16=>array(23, 16), 18: [15], 20: [13], 22=>array(1));
+            $stars[6][10]["nie"] = array(0=>array(24, 8), 2: [9], 4=>array(18), 6=>array(18), 8: [10], 10: [], 12: [12], 14: [12], 16: [], 18: [11], 20=>array(24), 22: []);
+            $stars[6][0]["ano"] = array(0: [13], 2=>array(3, 22), 4: [16], 6=>array(1), 8: [], 10: [], 12: [3], 14: [3], 16=>array(4, 23), 18: [17], 20=>array(0), 22: []);
+            $stars[6][0]["nie"] = array(0=>array(24), 2: [], 4: [6], 6: [7], 8=>array(8, 18), 10=>array(18, 9), 12: [12], 14: [12], 16: [], 18: [], 20=>array(24), 22=>array(20));
+            $stars[6][2]["ano"] = array(0: [4], 2=>array(3, 17), 4: [13], 6: [], 8: [14], 10: [15], 12=>array(5), 14=>array(1), 16: [16], 18: [], 20=>array(2), 22=>array(22));
+            $stars[6][2]["nie"] = array(0=>array(24), 2: [], 4=>array(19), 6=>array(20), 8: [], 10: [11], 12: [12], 14: [12], 16: [8], 18: [9], 20=>array(24), 22=>array(21));
+            $stars[6][4]["ano"] = array(0: [], 2=>array(25), 4=>array(16, 2), 6: [], 8: [13], 10: [17], 12=>array(5), 14: [3], 16=>array(23), 18=>array(22), 20=>array(0), 22=>array(1));
+            $stars[6][4]["nie"] = array(0=>array(8, 24), 2: [9], 4: [], 6=>array(21, 11), 8: [7], 10: [], 12: [12], 14: [12], 16=>array(18), 18=>array(18), 20=>array(24), 22: []);
+            $stars[7][7]["ano"] = array(0: [], 2: [], 4=>array(3, 14), 6: [15], 8: [], 10=>array(5), 12=>array(22), 14: [13], 16=>array(0, 2), 18=>array(23), 20: [4], 22: [17]);
+            $stars[7][7]["nie"] = array(0=>array(11, 19), 2=>array(10, 20), 4: [], 6: [], 8=>array(12, 6), 10: [12], 12: [8], 14: [9], 16: [], 18=>array(24), 20=>array(18), 22=>array(18));
+            $stars[7][9]["ano"] = array(0=>array(2), 2: [], 4=>array(3, 4), 6: [17], 8=>array(22), 10=>array(5), 12=>array(3, 14), 14: [15], 16=>array(0), 18: [13], 20: [], 22: [16]);
+            $stars[7][9]["nie"] = array(0=>array(18), 2=>array(21, 18), 4: [], 6: [10], 8: [12], 10: [12], 12: [], 14: [], 16: [6], 18=>array(24), 20=>array(11, 8), 22=>array(9));
+            $stars[7][11]["ano"] = array(0: [], 2=>array(1), 4=>array(22), 6: [], 8=>array(2), 10: [3], 12=>array(3, 4), 14: [17], 16=>array(0), 18=>array(23), 20: [14], 22: [13]);
+            $stars[7][11]["nie"] = array(0: [6], 2: [], 4: [8], 6=>array(9, 18), 8: [12], 10: [10], 12: [], 14: [], 16: [11], 18=>array(24), 20: [], 22=>array(7));
+            $stars[7][1]["ano"] = array(0=>array(22), 2: [13], 4=>array(3, 14), 6: [15], 8: [], 10=>array(5), 12: [3], 14: [], 16=>array(0, 2), 18=>array(23), 20: [4], 22=>array(16, 17));
+            $stars[7][1]["nie"] = array(0=>array(19), 2=>array(20), 4: [], 6: [], 8=>array(12, 6), 10: [12], 12: [8], 14=>array(9, 10), 16: [], 18=>array(24), 20: [7], 22: []);
+            $stars[7][3]["ano"] = array(0=>array(2), 2: [], 4=>array(3, 4), 6=>array(13, 17), 8: [], 10=>array(5), 12: [14], 14: [15], 16: [4], 18: [13], 20=>array(22), 22: []);
+            $stars[7][3]["nie"] = array(0: [7], 2=>array(21), 4: [], 6: [], 8=>array(12, 19), 10: [12], 12=>array(18), 14=>array(18), 16: [6], 18=>array(24), 20: [8], 22=>array(9));
+            $stars[7][5]["ano"] = array(0: [], 2=>array(1), 4: [3], 6: [], 8=>array(2), 10=>array(5), 12=>array(3, 4), 14: [17], 16=>array(22), 18=>array(23), 20: [14], 22: [15]);
+            $stars[7][5]["nie"] = array(0: [6], 2: [], 4: [8], 6: [9], 8: [12], 10: [12], 12: [], 14: [], 16=>array(18), 18=>array(24), 20: [], 22=>array(10));
+            $stars[8][8]["ano"] = array(0: [4], 2=>array(5, 17), 4: [16], 6: [3], 8=>array(25, 14), 10=>array(3, 22), 12=>array(0), 14=>array(5, 1), 16: [13], 18: [], 20=>array(2), 22: [16]);
+            $stars[8][8]["nie"] = array(0: [], 2: [], 4: [10], 6: [12], 8: [], 10: [], 12: [6], 14: [], 16=>array(24), 18: [9], 20=>array(18), 22=>array(18));
+            $stars[8][10]["ano"] = array(0: [], 2=>array(5), 4=>array(2), 6=>array(22), 8=>array(25), 10=>array(3, 17), 12=>array(0), 14=>array(5), 16: [16], 18: [15], 20: [13], 22=>array(23, 1));
+            $stars[8][10]["nie"] = array(0=>array(18, 8), 2=>array(18), 4: [12], 6: [12], 8: [10], 10: [], 12=>array(19), 14=>array(20), 16=>array(24), 18: [11], 20: [6], 22: []);
+            $stars[8][0]["ano"] = array(0=>array(14, 13), 2=>array(22, 5), 4: [16], 6: [3], 8=>array(25), 10: [3], 12=>array(2), 14=>array(5), 16: [4], 18: [17], 20: [], 22=>array(23));
+            $stars[8][0]["nie"] = array(0: [], 2: [], 4: [12], 6: [12], 8: [8], 10: [9], 12: [10], 14: [11], 16=>array(24), 18: [], 20=>array(19), 22=>array(20));
+            $stars[8][2]["ano"] = array(0: [4], 2=>array(5, 17), 4: [13], 6: [3], 8=>array(25), 10: [3], 12=>array(0), 14=>array(5, 1), 16: [16], 18: [], 20=>array(2), 22: [16]);
+            $stars[8][2]["nie"] = array(0: [], 2: [], 4: [12], 6: [12], 8=>array(18), 10: [7], 12: [6], 14: [], 16: [8], 18: [9], 20: [], 22=>array(21));
+            $stars[8][4]["ano"] = array(0: [], 2=>array(5), 4: [16], 6: [3], 8=>array(25), 10=>array(3, 17), 12=>array(0), 14=>array(5), 16: [14], 18=>array(22, 15), 20: [], 22=>array(23, 1));
+            $stars[8][4]["nie"] = array(0: [8], 2: [9], 4: [12], 6: [12], 8: [7], 10: [], 12=>array(19), 14=>array(18), 16=>array(24), 18: [], 20=>array(10, 6), 22: []);
+            $stars[8][6]["ano"] = array(0: [14], 2=>array(5), 4: [], 6: [3], 8=>array(25), 10: [3], 12=>array(0), 14=>array(22), 16: [16], 18: [17], 20: [], 22=>array(23));
+            $stars[8][6]["nie"] = array(0: [10], 2: [11], 4=>array(12, 6), 6: [12], 8: [8], 10: [9], 12: [7], 14=>array(21), 16=>array(24), 18=>array(18), 20=>array(19), 22=>array(20));
+            $stars[9][9]["ano"] = array(0=>array(23), 2: [], 4: [4], 6=>array(25), 8=>array(22), 10: [3], 12: [14], 14: [15], 16: [], 18: [13], 20=>array(5), 22: [16]);
+            $stars[9][9]["nie"] = array(0: [12], 2=>array(12, 21), 4: [], 6: [10], 8=>array(19), 10=>array(20), 12: [], 14=>array(24), 16: [6], 18: [7], 20=>array(18), 22=>array(18));
+            $stars[9][11]["ano"] = array(0=>array(23), 2=>array(1), 4=>array(22), 6: [3], 8=>array(5, 2), 10: [16], 12: [4], 14: [17], 16: [], 18: [], 20=>array(5), 22: [13]);
+            $stars[9][11]["nie"] = array(0: [12], 2: [12], 4: [8], 6: [9], 8: [], 10=>array(21), 12: [], 14=>array(24), 16=>array(19, 11), 18=>array(20), 20: [12], 22=>array(12));
+            $stars[9][1]["ano"] = array(0=>array(22), 2: [13], 4: [14], 6: [3], 8=>array(5), 10: [3, 1], 12: [], 14: [], 16=>array(2), 18: [], 20=>array(5), 22: [16]);
+            $stars[9][1]["nie"] = array(0: [12], 2: [12], 4=>array(18), 6=>array(18), 8: [6], 10: [], 12=>array(11, 8), 14=>array(24, 10), 16: [], 18=>array(21), 20: [12], 22=>array(12));
+            $stars[9][3]["ano"] = array(0=>array(0), 2: [], 4: [4], 6=>array(3, 25), 8=>array(0), 10: [16], 12: [14], 14: [15], 16: [], 18=>array(1), 20=>array(22), 22: []);
+            $stars[9][3]["nie"] = array(0: [12], 2=>array(12, 21), 4: [], 6: [], 8: [11], 10=>array(20), 12: [], 14=>array(24), 16: [6], 18: [10], 20: [12], 22=>array(9, 12));
+            $stars[9][5]["ano"] = array(0=>array(23), 2=>array(1), 4: [], 6: [3], 8=>array(5, 2), 10: [13], 12: [4], 14: [17], 16=>array(22), 18: [], 20: [14], 22: [16]);
+            $stars[9][5]["nie"] = array(0: [12], 2: [12], 4=>array(11, 8), 6: [9], 8: [], 10=>array(21), 12=>array(18), 14=>array(24), 16=>array(19), 18=>array(20), 20: [12], 22=>array(10));
+            $stars[9][7]["ano"] = array(0=>array(23), 2: [], 4: [14], 6=>array(3, 25), 8=>array(5), 10=>array(3, 16), 12=>array(22), 14: [13], 16=>array(2), 18: [], 20=>array(5), 22: [17]);
+            $stars[9][7]["nie"] = array(0: [12], 2=>array(10, 12), 4: [], 6: [], 8: [6], 10: [], 12: [8], 14=>array(24), 16=>array(18), 18=>array(18, 21), 20: [12], 22=>array(12));*/
+    }
+
+
+
+}});

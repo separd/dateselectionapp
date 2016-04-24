@@ -64,21 +64,28 @@ app.config(function ($translateProvider) {
   $translateProvider.preferredLanguage('en');
 });
 
-app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
-    $scope.selectedPerson = 2
-
-    $scope.menuarrow = true;
-    $scope.$storage = $localStorage.$default({
+app.run(function($rootScope, $localStorage, $filter, $astro) {
+    $rootScope.$storage = $localStorage.$default({
             locale: {lang: 'en', weekstart: 1},
-            personlist: []
+            personlist: [],
+            selectedActivity: 'any',
+            selectedPerson: 'generaly'
     });
-    $translate.use($scope.$storage.locale.lang);
+    $rootScope.activities = $astro.getActivities();
+    if ($rootScope.$storage.selectedActivity != 'any') {
+        activity = $filter('filter')($rootScope.activities, {id: $rootScope.$storage.selectedActivity.id});
+        $rootScope.$storage.selectedActivity = activity[0];
+    }
+})
 
-    $scope.activities = activities;
+app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
 
-    $scope.personlist = $scope.$storage.personlist;
-    $scope.selectedPerson = (typeof $rootScope.selectedPerson == 'number')?  $rootScope.selectedPerson : 'generaly';
-    $scope.selectedActivity = $rootScope.selectedActivity || 'any';
+    $translate.use($rootScope.$storage.locale.lang);
+    $scope.activities = $astro.getActivities();
+
+    $scope.personlist = $rootScope.$storage.personlist;
+    $scope.selectedPerson = $rootScope.$storage.selectedPerson;
+    $scope.selectedActivity = $rootScope.$storage.selectedActivity;
 
     $scope.groupList = $scope.activities.reduce(function(previous, current) {
         if (previous.indexOf(current.group) === -1) {
@@ -90,7 +97,7 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 	// CALENDAR
 
     $scope.selectedDate = null;
-    $scope.weekStartsOn = $scope.$storage.locale.weekstart;
+    $scope.weekStartsOn = $rootScope.$storage.locale.weekstart;
     $scope.dayFormat = "d";
     $scope.tooltips = true;
     $scope.disableFutureDates = false;
@@ -119,7 +126,8 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
     $scope.activitySelect = function(activity) {
         $scope.selectedActivity = activity;
-        $rootScope.selectedActivity = activity;
+        $rootScope.$storage.selectedActivity = activity;
+
         angular.forEach(MaterialCalendarData.data, function(value, key) {
             var date = new Date(key);
             dayValue = $astro.getRating(date, activity.name);
@@ -129,7 +137,7 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     
     $scope.personSelect = function(person) {
         $scope.selectedPerson = person;
-        $rootScope.selectedPerson = person;
+        $rootScope.$storage.selectedPerson = person;
         if (person == 'add') {
             $mdBottomSheet.show({
                   templateUrl: 'pages/person-add.html',
@@ -183,20 +191,16 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 });
 
 app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $translate, MaterialCalendarData,  $localStorage, $mdBottomSheet, $astro) {
-    $scope.$storage = $localStorage.$default({
-            locale: {lang: 'en', weekstart: 1},
-            personlist: []
-    });
-    $translate.use($scope.$storage.locale.lang);
+
+    $translate.use($rootScope.$storage.locale.lang);
 
     $scope.date = $routeParams.date;
 
-    $scope.activities = activities;
+    $scope.activities = $astro.getActivities();
+    $scope.personlist = $rootScope.$storage.personlist;
 
-    $scope.personlist = $scope.$storage.personlist;
-
-    $scope.selectedPerson = (typeof $rootScope.selectedPerson == 'number')?  $rootScope.selectedPerson : 'generaly';
-    $scope.selectedActivity = $rootScope.selectedActivity || 'any';
+    $scope.selectedPerson = $rootScope.$storage.selectedPerson;
+    $scope.selectedActivity = $rootScope.$storage.selectedActivity;
 
     $scope.groupList = $scope.activities.reduce(function(previous, current) {
         if (previous.indexOf(current.group) === -1) {
@@ -207,7 +211,7 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
 
     $scope.activitySelect = function(activity) {
         $scope.selectedActivity = activity;
-        $rootScope.selectedActivity = activity;
+        $rootScope.$storage.selectedActivity = activity;
         /*angular.forEach(MaterialCalendarData.data, function(value, key) {
             var date = new Date(key);
             dayValue = $astro.getRating(date, activity.name);
@@ -217,7 +221,7 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     
     $scope.personSelect = function(person) {
         $scope.selectedPerson = person;
-        $rootScope.selectedPerson = person;
+        $rootScope.$storage.selectedPerson = person;
         if (person == 'add') {
             $mdBottomSheet.show({
                   templateUrl: 'pages/person-add.html',
@@ -232,15 +236,31 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
                 $scope.selectedPerson = 'generaly';
             });
         }
+        person = ($scope.selectedPerson != 'generaly')?  $scope.personlist[$scope.selectedPerson].date : null;
+        
+        dayData = $astro.getRating(date, activity, person);
+
+        stars = $astro.getStars(dayData.rating);
+        starClass = (dayData.rating > 0)? 'positive' : 'negative';
+        starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
+
+        $scope.starClasses = starClasses;
+        $scope.ratingValue = dayData.rating;
+
     }
+
+    $scope.hours= [];
 
     date = new Date($scope.date + ' 00:00:00');
     activity = ($scope.selectedActivity != 'any')?  $scope.selectedActivity.name : null;
+    person = ($scope.selectedPerson != 'generaly')?  $scope.personlist[$scope.selectedPerson].date : null;
 
     next = new Date($scope.date + ' 00:00:00').setDate(date.getDate() + 1);
     previous = new Date($scope.date + ' 00:00:00').setDate(date.getDate() - 1);
 
-    dayData = $astro.getRating(date, activity);
+    dayData = $astro.getRating(date, activity, person);
+
+    $scope.hours = $astro.getRatingForHours(date, activity, person);
 
     stars = $astro.getStars(dayData.rating);
     starClass = (dayData.rating > 0)? 'positive' : 'negative';
@@ -251,17 +271,11 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     $scope.next = next;
     $scope.previous = previous;
 
-    console.log(stemCompatibility);
-
 })
 
-app.controller("languageCtrl", function($scope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage) {
+app.controller("languageCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage) {
 
-    $scope.$storage = $localStorage.$default({
-            locale: {lang: 'en', weekstart: 1},
-            personlist: []
-    });
-    $translate.use($scope.$storage.locale.lang);
+    $translate.use($rootScope.$storage.locale.lang);
 
     $scope.laguageSelect = function(lang) {
             $translate.use(lang);
@@ -271,26 +285,22 @@ app.controller("languageCtrl", function($scope, $filter, $q, $timeout, $log, $tr
                   $scope.weekstart = 1;
             }
 
-            $scope.$storage.locale.lang = lang;
-            $scope.$storage.locale.weekstart = $scope.weekstart;
+            $rootScope.$storage.locale.lang = lang;
+            $rootScope.$storage.locale.weekstart = $scope.weekstart;
     }
     $scope.laguage = $translate.use();
 
     $scope.setWeekStart = function(weekstart) {
-        $scope.$storage.locale.weekstart = weekstart;
+        $rootScope.$storage.locale.weekstart = weekstart;
     }
-    $scope.weekstart = $scope.$storage.locale.weekstart;
+    $scope.weekstart = $rootScope.$storage.locale.weekstart;
 });
 
-app.controller("personCtrl", function($scope, $filter, $q, $timeout, $log, $translate, $localStorage, $mdBottomSheet, $localStorage) {
+app.controller("personCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, $localStorage, $mdBottomSheet) {
 
-      $scope.$storage = $localStorage.$default({
-            locale: {lang: 'en', weekstart: 1},
-            personlist: []
-      });
-      $translate.use($scope.$storage.locale.lang);
+      $translate.use($rootScope.$storage.locale.lang);
 
-      $scope.personlist = $scope.$storage.personlist;
+      $scope.personlist = $rootScope.$storage.personlist;
 
       $scope.addPersonForm = function() {
             $mdBottomSheet.show({
@@ -313,12 +323,7 @@ app.controller("personCtrl", function($scope, $filter, $q, $timeout, $log, $tran
 
 });
 
-app.controller("addPersonCtrl", function($scope, $mdBottomSheet, $localStorage) {
-
-    $scope.$storage = $localStorage.$default({
-            locale: {lang: 'en', weekstart: 1},
-            personlist: []
-    });
+app.controller("addPersonCtrl", function($scope, $rootScope, $mdBottomSheet, $localStorage) {
 
     var datedays = [];
     for(var i=0; i<32; i++) {
@@ -331,23 +336,18 @@ app.controller("addPersonCtrl", function($scope, $mdBottomSheet, $localStorage) 
     $scope.savePerson = function() {
         var bornDate = new Date($scope.user.dateyear, $scope.user.datemonth, $scope.user.dateday);
         person = {name: $scope.user.name, date: bornDate};
-        $scope.$storage.personlist.push(person);
-        $mdBottomSheet.hide($scope.$storage.personlist.length - 1);
+        $rootScope.$storage.personlist.push(person);
+        $mdBottomSheet.hide($rootScope.$storage.personlist.length - 1);
     };
 });
 
-app.controller("deletePersonCtrl", function($scope, $mdBottomSheet, $localStorage, deletekey) {
-
-    $scope.$storage = $localStorage.$default({
-            locale: {lang: 'en', weekstart: 1},
-            personlist: []
-    });
+app.controller("deletePersonCtrl", function($scope, $rootScope, $mdBottomSheet, $localStorage, deletekey) {
 
     $scope.key = deletekey;
-    $scope.person = $scope.$storage.personlist[deletekey];
+    $scope.person = $rootScope.$storage.personlist[deletekey];
 
     $scope.deletePerson = function() {
-        $scope.$storage.personlist.splice(deletekey, 1);
+        $rootScope.$storage.personlist.splice(deletekey, 1);
         $mdBottomSheet.hide();
     };
 
