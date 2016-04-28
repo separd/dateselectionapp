@@ -76,6 +76,20 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
         activity = $filter('filter')($rootScope.activities, {id: $rootScope.$storage.selectedActivity.id});
         $rootScope.$storage.selectedActivity = activity[0];
     }
+
+    $rootScope.getRating = function(date) {
+
+        extraData = $rootScope.getActivityPersonPerson();
+        ratingData = $astro.getRating(date, extraData.activity, extraData.person);
+        return ratingData;
+    };
+
+    $rootScope.getActivityPersonPerson = function() {
+        activity = ($rootScope.$storage.selectedActivity != 'any')?  $rootScope.$storage.selectedActivity.name : null;
+        person = ($rootScope.$storage.selectedPerson != 'generaly')?  $rootScope.$storage.personlist[$rootScope.$storage.selectedPerson].date : null;
+        return {activity: activity, person: person};
+    }
+
 })
 
 app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
@@ -85,6 +99,9 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
     $scope.personlist = $rootScope.$storage.personlist;
     $scope.selectedPerson = $rootScope.$storage.selectedPerson;
+    if ($rootScope.$storage.selectedPerson != 'generaly' && typeof($scope.personlist[$rootScope.$storage.selectedPerson]) == 'undefined') {
+        $rootScope.$storage.selectedPerson = 'generaly';
+    }
     $scope.selectedActivity = $rootScope.$storage.selectedActivity;
 
     $scope.groupList = $scope.activities.reduce(function(previous, current) {
@@ -127,43 +144,47 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     $scope.activitySelect = function(activity) {
         $scope.selectedActivity = activity;
         $rootScope.$storage.selectedActivity = activity;
-
+        var date = new Date();
+        
         angular.forEach(MaterialCalendarData.data, function(value, key) {
             var date = new Date(key);
-            dayValue = $astro.getRating(date, activity.name);
+            dayValue = $rootScope.getRating(date);
             MaterialCalendarData.setDayContent(date, getDayHtml(dayValue));
         });
     }
     
     $scope.personSelect = function(person) {
-        $scope.selectedPerson = person;
-        $rootScope.$storage.selectedPerson = person;
         if (person == 'add') {
+            $scope.selectedPerson = 'generaly';
             $mdBottomSheet.show({
                   templateUrl: 'pages/person-add.html',
                   controller: 'addPersonCtrl'
             }).then(function(newPerson){
-                if (newPerson > 0) {
+                if (angular.isNumber(newPerson)) {
                     $scope.selectedPerson = newPerson;
-                } else {
-                    $scope.selectedPerson = 'generaly';
+                    $rootScope.$storage.selectedPerson = $scope.selectedPerson;
+                    angular.forEach(MaterialCalendarData.data, function(value, key) {
+                        var date = new Date(key);
+                        dayData = $rootScope.getRating(date);
+                        MaterialCalendarData.setDayContent(date, getDayHtml(dayData));
+                    });
                 }
-            }, function() {
-                $scope.selectedPerson = 'generaly';
             });
         }
-        /*angular.forEach(MaterialCalendarData.data, function(value, key) {
+        $rootScope.$storage.selectedPerson = $scope.selectedPerson;
+        angular.forEach(MaterialCalendarData.data, function(value, key) {
             var date = new Date(key);
-            dayValue = getRating(date, activity.name);
-            MaterialCalendarData.setDayContent(date, getDayHtml(dayValue));
-        });*/
+            dayData = $rootScope.getRating(date);
+            MaterialCalendarData.setDayContent(date, getDayHtml(dayData));
+        });
     }
 
     function getDayHtml(dayData) {
 
         dayHTML = '<div class="daydata">';
         if (dayData.filter > 0) {
-            dayHTML += '<div class="activity activity' + dayData.filter + '"></div>';
+            activityClass = (dayData.filter > 5)? 2 : 1;
+            dayHTML += '<div class="activity activity' + activityClass + '"></div>';
         }
         
         stars = $astro.getStars(dayData.rating);          
@@ -177,15 +198,8 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     }
 
     $scope.setDayContent = function(date) {
-        activity = ($scope.selectedActivity != 'any')? $scope.selectedActivity.name : null;
-        dayData = $astro.getRating(date, activity);
+        dayData = $rootScope.getRating(date);
         return getDayHtml(dayData);
-        /*if (!$scope.selectedActivity) {
-            return 0;
-        } else {
-            dayValue = $astro.getRating(date, $scope.selectedActivity.name);
-            return getDayHtml(dayValue);
-        }*/
     };
 
 });
@@ -199,6 +213,10 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     $scope.activities = $astro.getActivities();
     $scope.personlist = $rootScope.$storage.personlist;
 
+    
+    if ($rootScope.$storage.selectedPerson.selectedPerson != 'generaly' && typeof($scope.personlist[$rootScope.$storage.selectedPerson]) == 'undefined') {
+        $rootScope.$storage.selectedPerson = 'generaly';
+    }
     $scope.selectedPerson = $rootScope.$storage.selectedPerson;
     $scope.selectedActivity = $rootScope.$storage.selectedActivity;
 
@@ -209,36 +227,40 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         return previous;
     }, []);
 
+    var date = new Date($scope.date + ' 00:00:00');
+
     $scope.activitySelect = function(activity) {
-        $scope.selectedActivity = activity;
-        $rootScope.$storage.selectedActivity = activity;
-        /*angular.forEach(MaterialCalendarData.data, function(value, key) {
-            var date = new Date(key);
-            dayValue = $astro.getRating(date, activity.name);
-            MaterialCalendarData.setDayContent(date, getDayHtml(dayValue));
-        });*/
+        // zatial nic
     }
     
     $scope.personSelect = function(person) {
-        $scope.selectedPerson = person;
-        $rootScope.$storage.selectedPerson = person;
+
         if (person == 'add') {
+            $scope.selectedPerson = 'generaly';
             $mdBottomSheet.show({
                   templateUrl: 'pages/person-add.html',
                   controller: 'addPersonCtrl'
             }).then(function(newPerson){
-                if (newPerson > 0) {
+                if (angular.isNumber(newPerson)) {
                     $scope.selectedPerson = newPerson;
-                } else {
-                    $scope.selectedPerson = 'generaly';
+                    $rootScope.$storage.selectedPerson = $scope.selectedPerson;
+
+                    setDayData(date);
                 }
-            }, function() {
-                $scope.selectedPerson = 'generaly';
             });
         }
-        person = ($scope.selectedPerson != 'generaly')?  $scope.personlist[$scope.selectedPerson].date : null;
-        
-        dayData = $astro.getRating(date, activity, person);
+        $rootScope.$storage.selectedPerson = $scope.selectedPerson;
+
+        setDayData(date);
+    }
+
+    $scope.next = new Date($scope.date + ' 00:00:00').setDate(date.getDate() + 1);
+    $scope.previous = new Date($scope.date + ' 00:00:00').setDate(date.getDate() - 1);
+
+    setDayData(date);
+
+    function setDayData(date) {
+        dayData = $rootScope.getRating(date);
 
         stars = $astro.getStars(dayData.rating);
         starClass = (dayData.rating > 0)? 'positive' : 'negative';
@@ -247,29 +269,9 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         $scope.starClasses = starClasses;
         $scope.ratingValue = dayData.rating;
 
+        activityPerson = $rootScope.getActivityPersonPerson();
+        $scope.hours = $astro.getRatingForHours(date, activityPerson.activity, activityPerson.person);
     }
-
-    $scope.hours= [];
-
-    date = new Date($scope.date + ' 00:00:00');
-    activity = ($scope.selectedActivity != 'any')?  $scope.selectedActivity.name : null;
-    person = ($scope.selectedPerson != 'generaly')?  $scope.personlist[$scope.selectedPerson].date : null;
-
-    next = new Date($scope.date + ' 00:00:00').setDate(date.getDate() + 1);
-    previous = new Date($scope.date + ' 00:00:00').setDate(date.getDate() - 1);
-
-    dayData = $astro.getRating(date, activity, person);
-
-    $scope.hours = $astro.getRatingForHours(date, activity, person);
-
-    stars = $astro.getStars(dayData.rating);
-    starClass = (dayData.rating > 0)? 'positive' : 'negative';
-    starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
-
-    $scope.starClasses = starClasses;
-    $scope.ratingValue = dayData.rating;
-    $scope.next = next;
-    $scope.previous = previous;
 
 })
 
