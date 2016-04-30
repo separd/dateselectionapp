@@ -91,7 +91,11 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
         return {activity: activity, person: person};
     }
 
-})
+});
+
+    function setMothEvents($data) {
+        alert('Calendar success: ' + JSON.stringify(msg));
+    }
 
 app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
 
