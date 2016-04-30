@@ -61,6 +61,7 @@ app.directive('menuToggle', function() {
 app.config(function ($translateProvider) {
   $translateProvider.translations('en', $tranlationEN);
   $translateProvider.translations('sk', $tranlationSK);
+  $translateProvider.useSanitizeValueStrategy('escape');
   $translateProvider.preferredLanguage('en');
 });
 
@@ -130,15 +131,30 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
     $scope.prevMonth = function(data) {
         $scope.msg = "You clicked (prev) month " + data.month + ", " + data.year;
+        console.log(data);
     };
 
     $scope.nextMonth = function(data) {
-        $scope.msg = "You clicked (next) month " + data.month + ", " + data.year;
+        getMothEvents(data);
     };
 
     $scope.setContentViaService = function() {
         var today = new Date();
-        MaterialCalendarData.setDayContent(today, '<span> :oD </span>')
+        MaterialCalendarData.setDayContent(today, '<span> :oD </span>');
+        console.log('servis');
+        window.plugins.calendar.findEvent(null, null, null, startDate, endDate, onSuccess, onError);
+    }
+
+    function getMothEvents($data) {
+
+        var startDate = new Date($data.year, $data.month, 1, 0, 0, 0, 0);
+        var endDate = new Date($data.year, $data.month-1, 1, 0, 0, 0, -1);
+
+        window.plugins.calendar.findEvent(null, null, null, startDate, endDate, setMothEvents, onError);
+    }
+
+    function setMothEvents($data) {
+        alert('Calendar success: ' + JSON.stringify(msg));
     }
 
     $scope.activitySelect = function(activity) {

@@ -24,7 +24,7 @@
 				</div>
 
 				<div>
-					<md-select ng-model="selectedActivity" ng-change="activitySelect(selectedActivity)">
+					<md-select aria-label="{{'ANY_ACTIVITY' | translate}}" ng-model="selectedActivity" ng-change="activitySelect(selectedActivity)">
                                     <md-option value="any">{{'ANY_ACTIVITY' | translate}}</md-option>
 						<md-optgroup label="{{currentGroup | translate}}" ng-repeat="currentGroup in groupList">
 							<md-option ng-value="activity" ng-repeat="activity in activities | filter: {group: currentGroup}">{{activity.name | translate}}</md-option>
@@ -33,7 +33,7 @@
                         </div>
 
                         <div>
-                              <md-select ng-model="selectedPerson" ng-change="personSelect(selectedPerson)">
+                              <md-select aria-label="{{'DAY_GENERALY' | translate}}" ng-model="selectedPerson" ng-change="personSelect(selectedPerson)">
                                     <md-option value="generaly">{{'DAY_GENERALY' | translate}}</md-option>
                                     <md-option ng-value="key" ng-repeat="(key, person) in personlist">{{person.name}}</md-option>
                                     <md-option value="add">{{'ADD_PERSON' | translate}}</md-option>

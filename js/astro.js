@@ -123,26 +123,53 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
 
     getRatingForHours: function(d, actName, person) {
         var dateTable = this.setDateTable(d);
+        var bornTable = null;
         if (person) {
             bornDate = new Date(person);
-            var bornTable = this.setDateTable(bornDate);
+            bornTable = this.setDateTable(bornDate);
         }
         var $hourData = [];
+
         for ($h=0; $h<24; $h+=2) {
-            dayRating = 0;
+            var hourRating = 0;
 
             $hourTable = this.setDateTableHour(d, $h);
             dateTable['hour'] = {};
             dateTable['hour']['stem'] = $hourTable[0];
             dateTable['hour']['branch'] = $hourTable[1];
-            
+
+            hourRating += this.getHourStarsRating($h, dateTable);
+            hourRating += this.getStemCompatibility(dateTable.day.stem, dateTable.hour.stem);
+            hourRating += this.getBranchCompatibility(dateTable.day.branch, dateTable.hour.branch, 3);
+
+            if (bornTable) {
+                hourRating += this.getStemCompatibility(bornTable.year.stem, dateTable.hour.stem);
+                hourRating += this.getBranchCompatibility(bornTable.year.branch, dateTable.hour.branch, 3);
+            }
+
             hexagrams = this.getHexagrams(dateTable, bornTable);
-            dayRating += $dagua.getRating(hexagrams);
-            $hourData.push(dayRating);
-            $hourData.push(dayRating);
+            hourRating += $dagua.getRating(hexagrams);
+
+            $hourData.push(hourRating);
+            $hourData.push(hourRating);
         }
         return $hourData;
         
+    },
+
+    findHarmony: function() {
+        for ($i=0; $i<$source.harmonies.length; $i++) {
+
+        }
+    },
+
+    getHourStarsRating: function($h, $dateTable) {
+
+        $dayStars = $source.hourstars[$dateTable['day']['stem']][$dateTable['day']['branch']];
+        $rating = $dayStars['ano'][$h].length * 2;
+        $rating -= $dayStars['nie'][$h].length * 2;
+
+        return $rating
     },
 
     getGongDong: function(dateTable) {
