@@ -141,15 +141,14 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     $scope.setContentViaService = function() {
         var today = new Date();
         MaterialCalendarData.setDayContent(today, '<span> :oD </span>');
-        console.log('servis');
         window.plugins.calendar.findEvent(null, null, null, startDate, endDate, onSuccess, onError);
     }
 
     function getMothEvents($data) {
 
         var startDate = new Date($data.year, $data.month, 1, 0, 0, 0, 0);
-        var endDate = new Date($data.year, $data.month-1, 1, 0, 0, 0, -1);
-
+        var endDate = new Date($data.year, $data.month+1, 1, 0, 0, 0, -1);
+        alert(endDate);
         window.plugins.calendar.findEvent(null, null, null, startDate, endDate, setMothEvents, onError);
     }
 
