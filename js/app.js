@@ -94,7 +94,11 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
 });
 
     function setMothEvents($data) {
-        alert('Calendar success: ' + JSON.stringify(msg));
+        alert('Calendar success out: ' + JSON.stringify($data));
+    }
+
+    function onError(msg) {
+        alert('Calendar error: ' + JSON.stringify(msg));
     }
 
 app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
@@ -145,7 +149,6 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     $scope.setContentViaService = function() {
         var today = new Date();
         MaterialCalendarData.setDayContent(today, '<span> :oD </span>');
-        window.plugins.calendar.findEvent(null, null, null, startDate, endDate, onSuccess, onError);
     }
 
     function getMothEvents($data) {
@@ -153,7 +156,15 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         var startDate = new Date($data.year, $data.month, 1, 0, 0, 0, 0);
         var endDate = new Date($data.year, $data.month+1, 1, 0, 0, 0, -1);
         alert(endDate);
-        window.plugins.calendar.findEvent(null, null, null, startDate, endDate, setMothEvents, onError);
+        if (typeof(window.plugins) == 'undefined') {
+            alert('no plugin');
+        } else if (typeof(window.plugins.calendar) == 'undefined') {
+            alert('no calendar');
+        } else {
+            window.plugins.calendar.findEvent(null, null, null, startDate, endDate, setMothEvents, onError);
+            alert('find is ok');
+        }
+        
     }
 
     function setMothEvents($data) {
