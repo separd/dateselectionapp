@@ -1,0 +1,21 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.separdsoft.hello"
+        },
+        "cordova-plugin-crosswalk-webview": {
+            "PACKAGE_NAME": "com.separdsoft.hello"
+        },
+        "cordova-plugin-calendar": {
+            "PACKAGE_NAME": "com.separdsoft.hello"
+        }
+    },
+    "dependent_plugins": {}
+}

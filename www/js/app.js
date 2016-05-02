@@ -93,13 +93,13 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
 
 });
 
-    function setMothEvents($data) {
-        alert('Calendar success out: ' + JSON.stringify($data));
-    }
+function setMothEvents($data) {
+    alert('Calendar success out: ' + JSON.stringify($data));
+}
 
-    function onError(msg) {
-        alert('Calendar error: ' + JSON.stringify(msg));
-    }
+function onError(msg) {
+    alert('Calendar error out: ' + JSON.stringify(msg));
+}
 
 app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
 
@@ -155,7 +155,6 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
         var startDate = new Date($data.year, $data.month, 1, 0, 0, 0, 0);
         var endDate = new Date($data.year, $data.month+1, 1, 0, 0, 0, -1);
-        alert(endDate);
         if (typeof(window.plugins) == 'undefined') {
             alert('no plugin');
         } else if (typeof(window.plugins.calendar) == 'undefined') {
