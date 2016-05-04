@@ -94,6 +94,7 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
 });
 
 function setMothEvents($data) {
+    alert('hura');
     alert('Calendar success out: ' + JSON.stringify($data));
 }
 
