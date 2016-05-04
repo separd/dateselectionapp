@@ -162,7 +162,7 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
             alert('no calendar');
         } else {
             window.plugins.calendar.findEvent(null, null, null, startDate, endDate, setMothEvents, onError);
-            alert('find is ok');
+            //alert('find is ok');
         }
         
     }
