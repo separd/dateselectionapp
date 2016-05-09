@@ -194,15 +194,15 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     function getMothEvents() {
         document.getElementById('cdatatest').innerHTML = 'searching';
         var endDate = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth()+1, 1, 0, 0, 0, -1);
-        alert(endDate);
+        /*alert(endDate);
         if (typeof(window.plugins) == 'undefined') {
             alert('no plugin');
 
         } else if (typeof(window.plugins.calendar) == 'undefined') {
             alert('no calendar');
-        }
+        }*/
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            alert($scope.monthStart);
+            //alert($scope.monthStart);
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
             alert('find is ok');
         }
