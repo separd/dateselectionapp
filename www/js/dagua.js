@@ -1,7 +1,7 @@
 
 var app = angular.module("ngDaGua", []);
 
-app.factory("$dagua", function($rootScope, $filter) {return {
+app.factory("$dagua", function($filter) {return {
 
     getRating: function($hexagrams) {
         $hexaCombinations = [];
@@ -16,7 +16,7 @@ app.factory("$dagua", function($rootScope, $filter) {return {
                     $hexaCombinations[$hexaCombinations.length][$k] = 0;
                 }
             } else {
-                $tmpNew = [];
+
                 $tmpCount = $hexaCombinations.length;
 
                 for ($i=0; $i<$tmpCount; $i++) {
@@ -57,42 +57,45 @@ app.factory("$dagua", function($rootScope, $filter) {return {
     getDaguaPersonal: function($hexagrams) {
         
         $dayHexagrams = {};
-        var $isPersonal = false;
+        $personHexagrams = {};
         angular.forEach($hexagrams, function($hexagram, $k) {
-            if ($k == 'person') {
-                $isPersonal = true;
+            if ($k.indexOf('person') == 0) {
+                $personHexagrams[$k] = $hexagram;
             } else {
                 $dayHexagrams[$k] = $hexagram;
             }
         });
 
-        if (!$isPersonal) {
-            $ratings = this.getGagua($dayHexagrams);
-        } else {
-            $personalRatings = this.getGagua($hexagrams);
-            $dayRatings = this.getGagua($dayHexagrams);
+        
+        $dayRatings = this.getDagua($dayHexagrams);
+        $ratings = [];
+        for ($i=1; $i<=10; $i++) {
+            $ratings[$i] =  $dayRatings[$i] || 0;
+        }
 
-            $ratings = [];
+        angular.forEach($personHexagrams, function($person, $k) {
+            var $hexaWithPerson = $dayHexagrams;
+            $hexaWithPerson['person'] = $person;
+            var $personalRatings = this.getDagua($hexaWithPerson);
+            //console.log($k);
             for ($i=1; $i<=10; $i++) {
                 var $dr = $dayRatings[$i] || 0;
                 var $pr = $personalRatings[$i] || 0;
-                if ($dr > 0 && $pr > 0) {
-                    $ratings[$i] = $dr + $pr / 2;
-                } else if ($dr > 0 && $pr == 0) {
-                    $ratings[$i] = $dr / 2;
+                if ($dr > 0 && $pr == 0) {
+                    $ratings[$i] -= $dr / 2;
                 } else {
-                    $ratings[$i] = $pr / 2;
+                    $ratings[$i] += $pr / 2;
                 }
             }
-        }
+        }, this);
+
         $rating = $ratings.reduce(function(a, b){
             return a + b;
         }, 0);
-
         return $rating;
     },
 
-    getGagua: function($hexagrams) {
+    getDagua: function($hexagrams) {
         
         var $rating = [];
 

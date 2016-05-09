@@ -84,7 +84,7 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
         return officer;
     },
 
-    getRating: function(d, actName, person) {
+    getRating: function(d, actName, persons) {
         var dateTable = this.setDateTable(d);
 
         dayRating = 0;
@@ -99,13 +99,14 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
         dayRating += this.getBranchCompatibility(dateTable.day.branch, dateTable.year.branch, 1);
         dayRating += this.getBranchCompatibility(dateTable.month.branch, dateTable.year.branch, 2);
 
-        if (person) {
-            bornDate = new Date(person);
-            var bornTable = this.setDateTable(bornDate);
+        var bornTable = [];
+        angular.forEach(persons, function($person, $k) {
+            bornDate = new Date($person.date);
+            bornTable[$k] = this.setDateTable(bornDate);
 
-            dayRating += this.getStemCompatibility(bornTable.year.stem, dateTable.day.stem);
-            dayRating += this.getBranchCompatibility(bornTable.year.branch, dateTable.day.branch, 2);
-        }
+            dayRating += this.getStemCompatibility(bornTable[$k].year.stem, dateTable.day.stem);
+            dayRating += this.getBranchCompatibility(bornTable[$k].year.branch, dateTable.day.branch, 2);
+        }, this);
 
         hexagrams = this.getHexagrams(dateTable, bornTable);
         dayRating += $dagua.getRating(hexagrams);
@@ -121,13 +122,14 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
         return {rating: dayRating, filter: dayFilter};
     },
 
-    getRatingForHours: function(d, actName, person) {
+    getRatingForHours: function(d, actName, persons) {
         var dateTable = this.setDateTable(d);
-        var bornTable = null;
-        if (person) {
-            bornDate = new Date(person);
-            bornTable = this.setDateTable(bornDate);
-        }
+
+        var bornTables = [];
+        angular.forEach(persons, function($person, $k) {
+            bornDate = new Date($person.date);
+            bornTables[$k] = this.setDateTable(bornDate);
+        }, this);
         var $hourData = [];
 
         for ($h=0; $h<24; $h+=2) {
@@ -142,12 +144,12 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
             hourRating += this.getStemCompatibility(dateTable.day.stem, dateTable.hour.stem);
             hourRating += this.getBranchCompatibility(dateTable.day.branch, dateTable.hour.branch, 3);
 
-            if (bornTable) {
+            angular.forEach(bornTables, function(bornTable, $k) {
                 hourRating += this.getStemCompatibility(bornTable.year.stem, dateTable.hour.stem);
                 hourRating += this.getBranchCompatibility(bornTable.year.branch, dateTable.hour.branch, 3);
-            }
+            }, this);
 
-            hexagrams = this.getHexagrams(dateTable, bornTable);
+            hexagrams = this.getHexagrams(dateTable, bornTables);
             hourRating += $dagua.getRating(hexagrams);
 
             $hourData.push(hourRating);
@@ -255,7 +257,7 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
         return rating;
     },
 
-    getHexagrams: function(dateTable, bornTable){
+    getHexagrams: function(dateTable, bornTables){
         allhexagrams = [];
         angular.forEach($source.hexagrams, function(value, key) {
             hexa1 = {};
@@ -273,11 +275,11 @@ app.factory("$astro", function($rootScope, $filter, $dagua, $source) {return {
             hexagrams[key] = $filter('filter')(allhexagrams, {stem: stem, branch: branch});
         });
 
-        if (bornTable) {
+        angular.forEach(bornTables, function(bornTable, $k) {
             stem     = $source.stems[bornTable['year']['stem']];
             branch   = $source.branches[bornTable['year']['branch']];
-            hexagrams['person'] = $filter('filter')(allhexagrams, {stem: stem, branch: branch});
-        }
+            hexagrams['person' + $k] = $filter('filter')(allhexagrams, {stem: stem, branch: branch});
+        });
         return hexagrams;
     },
 

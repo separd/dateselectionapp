@@ -1,4 +1,4 @@
-var app = angular.module("dateselectionguru", ['ngMaterial', 'ngRoute', 'materialCalendar', 'pascalprecht.translate', 'ngStorage', 'hamburgerHelper', 'ngAstro']);
+var app = angular.module("dateselectionguru", ['ngMaterial', 'ngRoute', 'materialCalendar', 'pascalprecht.translate', 'ngStorage', 'hamburgerHelper', 'angularMaterialPreloader', 'ngAstro']);
 
 app.config(function($mdThemingProvider) {
     $mdThemingProvider
@@ -70,7 +70,7 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
             locale: {lang: 'en', weekstart: 1},
             personlist: [],
             selectedActivity: 'any',
-            selectedPerson: 'generaly'
+            selectedPerson: []
     });
     $rootScope.activities = $astro.getActivities();
     if ($rootScope.$storage.selectedActivity != 'any') {
@@ -78,41 +78,81 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
         $rootScope.$storage.selectedActivity = activity[0];
     }
 
-    $rootScope.getRating = function(date) {
-
-        extraData = $rootScope.getActivityPersonPerson();
-        ratingData = $astro.getRating(date, extraData.activity, extraData.person);
-        return ratingData;
-    };
-
-    $rootScope.getActivityPersonPerson = function() {
-        activity = ($rootScope.$storage.selectedActivity != 'any')?  $rootScope.$storage.selectedActivity.name : null;
-        person = ($rootScope.$storage.selectedPerson != 'generaly')?  $rootScope.$storage.personlist[$rootScope.$storage.selectedPerson].date : null;
-        return {activity: activity, person: person};
-    }
-
 });
 
-function setMothEvents($data) {
-    alert('hura');
-    alert('Calendar success out: ' + JSON.stringify($data));
-}
+app.factory('$Rating', function($q, $astro, $timeout, $rootScope, $localStorage) {
 
-function onError(msg) {
-    alert('Calendar error out: ' + JSON.stringify(msg));
-}
+    var activityPerson = getActivityPerson();
 
-app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro) {
+    var getDay = function(date) {
+        var deferred = $q.defer();
+
+        $ratingData = $astro.getRating(date, activityPerson.activity, activityPerson.person);
+        deferred.resolve($ratingData);
+        return deferred.promise;
+    };
+  
+    var getHours = function(date) {
+        var deferred = $q.defer();
+
+        $timeout(function() {
+            $hours = $astro.getRatingForHours(date, activityPerson.activity, activityPerson.person);
+            deferred.resolve($hours);
+        }, 500);
+  
+        return deferred.promise;
+    };
+
+    var getMonth = function($monthStart) {
+        var deferred = $q.defer();
+
+        $timeout(function() {
+           
+            var myMonth = $monthStart.getMonth();
+            var monthData = [];
+
+            var date = new Date($monthStart.getFullYear(), $monthStart.getMonth(), 1, 0, 0, 0, 0);
+            while (date.getMonth() == myMonth) {
+                monthData.push($astro.getRating(date, activityPerson.activity, activityPerson.person));
+                date.setDate(date.getDate() + 1);
+            }
+
+            deferred.resolve(monthData);
+        }, 500);
+  
+        return deferred.promise;
+    };
+    
+    return {
+        getDay: getDay,
+        getHours: getHours,
+        getMonth: getMonth
+    };
+
+    function getActivityPerson() {
+        activity = ($rootScope.$storage.selectedActivity != 'any')?  $rootScope.$storage.selectedActivity.name : null;
+        person = [];
+        angular.forEach($rootScope.$storage.selectedPerson, function($personKey, $k) {
+            if (typeof($rootScope.$storage.personlist[$personKey]) != 'undefined') {
+                person.push($rootScope.$storage.personlist[$personKey]);
+            }
+        });
+
+        return {activity: activity, person: person};
+    };
+  
+  })
+
+app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage, $mdBottomSheet, $astro, $Rating) {
 
     $translate.use($rootScope.$storage.locale.lang);
-    $scope.activities = $astro.getActivities();
 
+    $scope.activities = $astro.getActivities();
     $scope.personlist = $rootScope.$storage.personlist;
     $scope.selectedPerson = $rootScope.$storage.selectedPerson;
-    if ($rootScope.$storage.selectedPerson != 'generaly' && typeof($scope.personlist[$rootScope.$storage.selectedPerson]) == 'undefined') {
-        $rootScope.$storage.selectedPerson = 'generaly';
-    }
     $scope.selectedActivity = $rootScope.$storage.selectedActivity;
+    $now = new Date();
+    $scope.monthStart = new Date($now.getFullYear(), $now.getMonth(), 1, 0, 0, 0, 0);
 
     $scope.groupList = $scope.activities.reduce(function(previous, current) {
         if (previous.indexOf(current.group) === -1) {
@@ -139,33 +179,28 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     };
 
     $scope.prevMonth = function(data) {
-        $scope.msg = "You clicked (prev) month " + data.month + ", " + data.year;
-        console.log(data);
-    };
-
-    $scope.nextMonth = function(data) {
+        $scope.monthStart = new Date(data.year, data.month-1, 1, 0, 0, 0, 0);
+        setCalendarHtml();
         getMothEvents(data);
     };
 
-    $scope.setContentViaService = function() {
-        var today = new Date();
-        MaterialCalendarData.setDayContent(today, '<span> :oD </span>');
-    }
+    $scope.nextMonth = function(data) {
+        $scope.monthStart = new Date(data.year, data.month-1, 1, 0, 0, 0, 0);
+        setCalendarHtml();
+        getMothEvents();
+    };
 
-    function getMothEvents($data) {
+    $scope.cdata = 'none';
+    function getMothEvents() {
+        document.getElementById('cdatatest').innerHTML = 'searching';
+        var endDate = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth()+1, 1, 0, 0, 0, -1);
+        if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
+            window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
 
-        var startDate = new Date($data.year, $data.month, 1, 0, 0, 0, 0);
-        var endDate = new Date($data.year, $data.month+1, 1, 0, 0, 0, -1);
-        if (typeof(window.plugins) == 'undefined') {
-            alert('no plugin');
-        } else if (typeof(window.plugins.calendar) == 'undefined') {
-            alert('no calendar');
-        } else {
-            window.plugins.calendar.findEvent(null, null, null, startDate, endDate, setMothEvents, onError);
-            //alert('find is ok');
         }
         function setMothEvents($data) {
             alert('Calendar success in: ' + JSON.stringify($data));
+            document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
         }
         
     }
@@ -175,41 +210,29 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     }
 
     $scope.activitySelect = function(activity) {
-        $scope.selectedActivity = activity;
         $rootScope.$storage.selectedActivity = activity;
-        var date = new Date();
-        
-        angular.forEach(MaterialCalendarData.data, function(value, key) {
-            var date = new Date(key);
-            dayValue = $rootScope.getRating(date);
-            MaterialCalendarData.setDayContent(date, getDayHtml(dayValue));
-        });
+        setCalendarHtml();
     }
     
     $scope.personSelect = function(person) {
-        if (person == 'add') {
-            $scope.selectedPerson = 'generaly';
+        if (person.indexOf('add') !== -1) {
+            $scope.selectedPerson = $rootScope.$storage.selectedPerson;
+            angular.element(document.querySelector('md-backdrop')).triggerHandler('click');
             $mdBottomSheet.show({
                   templateUrl: 'pages/person-add.html',
                   controller: 'addPersonCtrl'
-            }).then(function(newPerson){
+            }).then(function(newPerson) {
                 if (angular.isNumber(newPerson)) {
-                    $scope.selectedPerson = newPerson;
+                    $scope.selectedPerson = $scope.selectedPerson.concat(newPerson);
                     $rootScope.$storage.selectedPerson = $scope.selectedPerson;
-                    angular.forEach(MaterialCalendarData.data, function(value, key) {
-                        var date = new Date(key);
-                        dayData = $rootScope.getRating(date);
-                        MaterialCalendarData.setDayContent(date, getDayHtml(dayData));
-                    });
+                    setCalendarHtml();
                 }
             });
         }
-        $rootScope.$storage.selectedPerson = $scope.selectedPerson;
-        angular.forEach(MaterialCalendarData.data, function(value, key) {
-            var date = new Date(key);
-            dayData = $rootScope.getRating(date);
-            MaterialCalendarData.setDayContent(date, getDayHtml(dayData));
-        });
+        if (!angular.equals($rootScope.$storage.selectedPerson, $scope.selectedPerson)) {
+            $rootScope.$storage.selectedPerson = $scope.selectedPerson;
+            setCalendarHtml();
+        }
     }
 
     function getDayHtml(dayData) {
@@ -230,26 +253,38 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         return dayHTML;
     }
 
-    $scope.setDayContent = function(date) {
-        dayData = $rootScope.getRating(date);
-        return getDayHtml(dayData);
-    };
+    function setCalendarHtml() {
+        angular.element(document.querySelector('md-backdrop')).triggerHandler('click');
 
+        myMonth = $scope.monthStart.getMonth();
+        angular.forEach(MaterialCalendarData.data, function(value, key) {
+            var date = new Date(key);
+            if (date.getMonth() == myMonth) {
+                MaterialCalendarData.setDayContent(date, '<div class="ratingwrap" title="calculating"></div>');
+            } else {
+                MaterialCalendarData.setDayContent(date, '<div></div>');
+            }
+        }); 
+
+        $Rating.getMonth($scope.monthStart).then(function($days) {
+            for ($i=0; $i<$days.length; $i++) {
+                var date = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth(), 1+$i, 0, 0, 0, 0);
+                MaterialCalendarData.setDayContent(date, getDayHtml($days[$i]));
+            }
+        });
+    }
+    setCalendarHtml();
+    getMothEvents();
 });
 
-app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $translate, MaterialCalendarData,  $localStorage, $mdBottomSheet, $astro) {
+app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $translate, MaterialCalendarData,  $localStorage, $mdBottomSheet, $astro, $Rating) {
+
+    $scope.materialPreloader = false;
 
     $translate.use($rootScope.$storage.locale.lang);
 
-    $scope.date = $routeParams.date;
-
     $scope.activities = $astro.getActivities();
     $scope.personlist = $rootScope.$storage.personlist;
-
-    
-    if ($rootScope.$storage.selectedPerson.selectedPerson != 'generaly' && typeof($scope.personlist[$rootScope.$storage.selectedPerson]) == 'undefined') {
-        $rootScope.$storage.selectedPerson = 'generaly';
-    }
     $scope.selectedPerson = $rootScope.$storage.selectedPerson;
     $scope.selectedActivity = $rootScope.$storage.selectedActivity;
 
@@ -260,31 +295,32 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         return previous;
     }, []);
 
+    $scope.date = $routeParams.date;
     var date = new Date($scope.date + ' 00:00:00');
 
     $scope.activitySelect = function(activity) {
         // zatial nic
     }
-    
-    $scope.personSelect = function(person) {
 
-        if (person == 'add') {
-            $scope.selectedPerson = 'generaly';
+    $scope.personSelect = function(person) {
+        if (person.indexOf('add') !== -1) {
+            $scope.selectedPerson = $rootScope.$storage.selectedPerson;
+            angular.element(document.querySelector('md-backdrop')).triggerHandler('click');
             $mdBottomSheet.show({
                   templateUrl: 'pages/person-add.html',
                   controller: 'addPersonCtrl'
-            }).then(function(newPerson){
+            }).then(function(newPerson) {
                 if (angular.isNumber(newPerson)) {
-                    $scope.selectedPerson = newPerson;
+                    $scope.selectedPerson = $scope.selectedPerson.concat(newPerson);
                     $rootScope.$storage.selectedPerson = $scope.selectedPerson;
-
                     setDayData(date);
                 }
             });
         }
-        $rootScope.$storage.selectedPerson = $scope.selectedPerson;
-
-        setDayData(date);
+        if (!angular.equals($rootScope.$storage.selectedPerson, $scope.selectedPerson)) {
+            $rootScope.$storage.selectedPerson = $scope.selectedPerson;
+            setDayData(date);
+        }
     }
 
     $scope.next = new Date($scope.date + ' 00:00:00').setDate(date.getDate() + 1);
@@ -293,17 +329,22 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     setDayData(date);
 
     function setDayData(date) {
-        dayData = $rootScope.getRating(date);
+        $Rating.getDay(date).then(function($dayData) {
+            dayData = $dayData;
+            stars = $astro.getStars(dayData.rating);
+            starClass = (dayData.rating > 0)? 'positive' : 'negative';
+            starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
 
-        stars = $astro.getStars(dayData.rating);
-        starClass = (dayData.rating > 0)? 'positive' : 'negative';
-        starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
+            $scope.starClasses = starClasses;
+            $scope.ratingValue = dayData.rating;
+        });
 
-        $scope.starClasses = starClasses;
-        $scope.ratingValue = dayData.rating;
-
-        activityPerson = $rootScope.getActivityPersonPerson();
-        $scope.hours = $astro.getRatingForHours(date, activityPerson.activity, activityPerson.person);
+        $scope.hours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].fill('...');
+  
+        angular.element(document.querySelector('md-backdrop')).triggerHandler('click');
+        $Rating.getHours(date).then(function($hours) {
+            $scope.hours = $hours;
+        });
     }
 
 })
@@ -383,6 +424,10 @@ app.controller("deletePersonCtrl", function($scope, $rootScope, $mdBottomSheet, 
 
     $scope.deletePerson = function() {
         $rootScope.$storage.personlist.splice(deletekey, 1);
+        $deleteInSelected = $rootScope.$storage.selectedPerson.indexOf(deletekey);
+        if ($deleteInSelected != -1) {
+            $rootScope.$storage.selectedPerson.splice($deleteInSelected, 1);
+        }
         $mdBottomSheet.hide();
     };
 

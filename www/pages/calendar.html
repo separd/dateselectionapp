@@ -32,12 +32,11 @@
 					</md-select>
                         </div>
 
-                        <div>
-                              <md-select aria-label="{{'DAY_GENERALY' | translate}}" ng-model="selectedPerson" ng-change="personSelect(selectedPerson)">
-                                    <md-option value="generaly">{{'DAY_GENERALY' | translate}}</md-option>
+                        <md-input-container>
+                              <md-select id="personMenu" multiple aria-label="{{'DAY_GENERALY' | translate}}" ng-model="selectedPerson" ng-change="personSelect(selectedPerson)" placeholder="{{'DAY_GENERALY' | translate}}">
                                     <md-option ng-value="key" ng-repeat="(key, person) in personlist">{{person.name}}</md-option>
                                     <md-option value="add">{{'ADD_PERSON' | translate}}</md-option>
                               </md-select>
-                        </div>
+                        </md-input-container>
             </div>
         </div>
