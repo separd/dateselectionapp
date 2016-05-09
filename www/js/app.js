@@ -191,18 +191,16 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         getMothEvents();
     };
 
-    $scope.cdata = 'none';
     function getMothEvents() {
         var endDate = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth()+1, 1, 0, 0, 0, -1);
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
         } else {
             // debug
-            setTimeout(function(){
+            /*setTimeout(function(){
                 $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-06 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-07 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-15 21:30:00","endDate":"2016-07-17 15:00:00","allday":false}];
                 setMothEvents($data);
-            }, 200);
-            //
+            }, 200);*/
         }
         function setMothEvents($data) {
             angular.forEach($data, function(event, key) {
@@ -357,7 +355,34 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         angular.element(document.querySelector('md-backdrop')).triggerHandler('click');
         $Rating.getHours(date).then(function($hours) {
             $scope.hours = $hours;
+            getDayEvents();
         });
+    }
+
+    function getDayEvents() {
+
+        var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 0);
+        if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
+            window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
+        } else {
+            // debug
+            setTimeout(function(){
+                $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-05 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-05 15:00:00","allday":false}];
+                $scope.$events = [];
+                setDayEvents($data);
+            }, 200);
+            //
+        }
+        function setDayEvents($data) {
+            angular.forEach($data, function(event, key) {
+                hourId = parseInt(event.startDate.substr(11, 2));
+                $scope.$events[hourId] = event.title + ' ' + event.location;
+            });
+            $scope.$apply();
+        }
+        function onError($msg) {
+            document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
+        }
     }
 
 })

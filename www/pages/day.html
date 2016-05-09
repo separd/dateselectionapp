@@ -27,8 +27,9 @@
           <br />day rating: {{ratingValue}}<br />{{$s}}
       </div>
         <div ng-repeat="$rating in hours track by $index" layout="row" class="hourrow">
-            <div class="hourtitle" flex><strong>{{($index>9)? '' : '0'}}{{$index}}:00</strong> - {{($index>9)? '' : '0'}}{{$index}}:59</div>
-            <div flex>rating: {{$rating}}</div>
+            <div class="hourtitle"><strong>{{($index>9)? '' : '0'}}{{$index}}:00</strong> - {{($index>9)? '' : '0'}}{{$index}}:59</div>
+            <div flex class="events">{{$events[$index]}}</div>
+            <div>rating: {{$rating}}</div>
         </div>
     </div>
 
