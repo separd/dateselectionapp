@@ -82,10 +82,9 @@ app.run(function($rootScope, $localStorage, $filter, $astro) {
 
 app.factory('$Rating', function($q, $astro, $timeout, $rootScope, $localStorage) {
 
-    var activityPerson = getActivityPerson();
-
     var getDay = function(date) {
         var deferred = $q.defer();
+        var activityPerson = getActivityPerson();
 
         $ratingData = $astro.getRating(date, activityPerson.activity, activityPerson.person);
         deferred.resolve($ratingData);
@@ -94,6 +93,7 @@ app.factory('$Rating', function($q, $astro, $timeout, $rootScope, $localStorage)
   
     var getHours = function(date) {
         var deferred = $q.defer();
+        var activityPerson = getActivityPerson();
 
         $timeout(function() {
             $hours = $astro.getRatingForHours(date, activityPerson.activity, activityPerson.person);
@@ -105,6 +105,7 @@ app.factory('$Rating', function($q, $astro, $timeout, $rootScope, $localStorage)
 
     var getMonth = function($monthStart) {
         var deferred = $q.defer();
+        var activityPerson = getActivityPerson();
 
         $timeout(function() {
            
@@ -192,29 +193,28 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
     $scope.cdata = 'none';
     function getMothEvents() {
-        document.getElementById('cdatatest').innerHTML = 'searching';
         var endDate = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth()+1, 1, 0, 0, 0, -1);
-        /*alert(endDate);
-        if (typeof(window.plugins) == 'undefined') {
-            alert('no plugin');
-
-        } else if (typeof(window.plugins.calendar) == 'undefined') {
-            alert('no calendar');
-        }*/
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            //alert($scope.monthStart);
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
-            alert('find is ok');
+        } else {
+            // debug
+            setTimeout(function(){
+                $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-06 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-07 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-15 21:30:00","endDate":"2016-07-17 15:00:00","allday":false}];
+                setMothEvents($data);
+            }, 200);
+            //
         }
         function setMothEvents($data) {
-            alert('Calendar success in: ' + JSON.stringify($data));
-            document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
+            angular.forEach($data, function(event, key) {
+                dateId = event.startDate.substr(0, 10);
+
+                eventElement = angular.element( document.querySelector('.event_' + dateId) );
+                eventElement.addClass('active');
+            });
         }
         function onError($msg) {
-            alert('Calendar success in: ' + JSON.stringify($msg));
             document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
         }
-        
     }
 
     function setMothEvents($data) {
@@ -247,19 +247,20 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         }
     }
 
-    function getDayHtml(dayData) {
+    function getDayHtml(dayData, date) {
 
         dayHTML = '<div class="daydata">';
         if (dayData.filter > 0) {
             activityClass = (dayData.filter > 5)? 2 : 1;
             dayHTML += '<div class="activity activity' + activityClass + '"></div>';
         }
-        
+        dateId = $filter("date")(date, "yyyy-MM-dd");
+
         stars = $astro.getStars(dayData.rating);          
         ratingClass = (dayData.rating < 0)? 'negative' : 'positive';
         ratingPerc = Math.abs(stars) * 20;
         dayHTML += '<div class="ratingwrap" title="' + dayData.rating + '"><div class="ratingval ratingval' + ratingPerc + ' ' + ratingClass + '"></div></div>';
-
+        dayHTML += '<div class="event event_' + dateId + '" id="event_' + dateId + '"></div>';
         dayHTML += '</div>';
 
         return dayHTML;
@@ -281,12 +282,12 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         $Rating.getMonth($scope.monthStart).then(function($days) {
             for ($i=0; $i<$days.length; $i++) {
                 var date = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth(), 1+$i, 0, 0, 0, 0);
-                MaterialCalendarData.setDayContent(date, getDayHtml($days[$i]));
+                MaterialCalendarData.setDayContent(date, getDayHtml($days[$i], date));
             }
+            getMothEvents();
         });
     }
     setCalendarHtml();
-    getMothEvents();
 });
 
 app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $translate, MaterialCalendarData,  $localStorage, $mdBottomSheet, $astro, $Rating) {

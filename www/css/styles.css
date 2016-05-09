@@ -70,6 +70,18 @@ html,body{font-family:"Roboto",sans-serif;}.styles__ribbon{background-color:rgba
 .ratingval100 {
     width: 100%;
 }
+.daydata .event.active {
+    position: absolute;
+    right: 15%;
+    top: 20%;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #008800;
+    z-index: 10;
+    opacity: 1;
+    color: #FFFFFF;
+}
 
 .layout-transparent {
 	background: #A1887F;
