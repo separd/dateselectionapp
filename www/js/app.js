@@ -195,11 +195,16 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         document.getElementById('cdatatest').innerHTML = 'searching';
         var endDate = new Date($scope.monthStart.getFullYear(), $scope.monthStart.getMonth()+1, 1, 0, 0, 0, -1);
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
+            alert(endDate);
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
-
+            alert('find is ok');
         }
         function setMothEvents($data) {
             alert('Calendar success in: ' + JSON.stringify($data));
+            document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
+        }
+        function onError($msg) {
+            alert('Calendar success in: ' + JSON.stringify($msg));
             document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
         }
         
