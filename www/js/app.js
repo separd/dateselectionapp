@@ -405,13 +405,14 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
 
         var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 0);
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
+            alert(date);
+            window.plugins.calendar.findEvent(null, null, null, date, endDate, setMothEvents, onError);
             alert('find ok');
         } else {
             // debug
             setTimeout(function(){
                 $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-05 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-05 15:00:00","allday":false}];
-                setDayEvents($data);
+                setDayEvents(json$data);
             }, 200);
             //
         }
