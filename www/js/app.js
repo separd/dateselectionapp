@@ -443,8 +443,12 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
                 getNewDayEvents();
             }, 200);
         }
-        function getNewDayEvents() {
+        function getNewDayEvents($data) {
+            alert(JSON.stringify($data));
             getDayEvents();
+        }
+        function onError($msg) {
+            alert(JSON.stringify($msg));
         }
     }
 
