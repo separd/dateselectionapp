@@ -405,8 +405,8 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
 
         var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 0);
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            alert(date);
-            window.plugins.calendar.findEvent(null, null, null, date, endDate, setMothEvents, onError);
+            alert(endDate);
+            window.plugins.calendar.findEvent(null, null, null, date, endDate, setDayEvents, onError);
             alert('find ok');
         } else {
             // debug
