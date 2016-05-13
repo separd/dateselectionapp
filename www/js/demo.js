@@ -68,6 +68,10 @@ function createCalendar() {
   window.plugins.calendar.createCalendar(calendarName, onSuccess, onError);
 }
 
+function deleteCalendar() {
+  window.plugins.calendar.deleteCalendar(calendarName, onSuccess, onError);
+}
+
 function deleteEvent() {
   window.plugins.calendar.deleteEvent(title, loc, notes, startDate, endDate, onSuccess, onError);
 }

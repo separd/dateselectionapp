@@ -13,7 +13,7 @@
             </md-button>
             <div flex></div>
             <h2 class='calendar-md-title'>
-              <span>{{ date | date:'d':timezone }}. {{ date | date:'MMMM':timezone | translate}} {{ date | date:'yyyy':timezone }}</span>
+              <span>{{date | date:'d':timezone}}. {{ date | date:'MMMM':timezone | translate}} {{ date | date:'yyyy':timezone }}</span>
             </h2>
             <div flex></div>
             <md-button class='md-icon-button' href="#/day/{{next | date:'yyyy-MM-dd'}}" aria-label='Next month'>
@@ -22,15 +22,25 @@
           </div>
         </md-toolbar>
       <div class="dayinfo">
-          <i ng-repeat="starClass in starClasses track by $index"  class="large material-icons {{starClass}}">star</i>
-
-          <br />day rating: {{ratingValue}}<br />{{$s}}
+          <star-rating rating="{{ratingValue}}">{{ratingValue}}</star-rating>
+          <br />day rating: {{ratingValue}}<br />
       </div>
-        <div ng-repeat="$rating in hours track by $index" layout="row" class="hourrow">
-            <div class="hourtitle"><strong>{{($index>9)? '' : '0'}}{{$index}}:00</strong> - {{($index>9)? '' : '0'}}{{$index}}:59</div>
-            <div flex class="events">{{$events[$index]}}</div>
-            <div>rating: {{$rating}}</div>
-        </div>
+        <md-card ng-repeat="$rating in hours track by $index">
+          <md-card-content>
+            <div layout="row" layout-align="space-between center">
+              <div class="md-title"><strong>{{($index>9)? '' : '0'}}{{$index}}:00</strong></div>
+              <star-rating rating="{{$rating}}"></star-rating>
+              <div><md-button class="md-fab md-mini" aria-label="Eat cake">+</md-button></div>
+            </div>
+            <md-divider></md-divider>
+            <md-list>
+            <md-list-item ng-repeat="$event in $events[$index]" ng-click="goToPerson(person.name, $event)">
+              <p>{{$event}}</p>
+              <md-icon md-svg-src="img/close-circle.svg" ng-click="deletePersonForm(key)" class="md-secondary md-hue-3"></md-icon>
+            </md-list-item>
+            </md-list>
+          </md-card-content>
+        </md-card>
     </div>
 
     <div>

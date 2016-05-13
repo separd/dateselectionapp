@@ -58,6 +58,48 @@ app.directive('menuToggle', function() {
         };
 });
 
+app.directive('starRating', function() {
+    return {
+
+            link: function(scope, $element, $attr) {
+
+                $attr.$observe('rating', function(rating){
+                    if(rating){
+   
+                        if (rating < -8) {
+                            stars = 5
+                        } else if (rating < -6) {
+                            stars = 4
+                        } else if (rating < -4) {
+                            stars = 3
+                        } else if (rating < -2) {
+                            stars = 2
+                        } else if (rating < 0) {
+                            stars = 1
+                        } else if (rating  == 0) {
+                            stars = 0
+                        } else if (rating > 8) {
+                            stars = 5
+                        } else if (rating > 6) {
+                            stars = 4
+                        } else if (rating > 4) {
+                            stars = 3
+                        } else if (rating > 2) {
+                            stars = 2
+                        } else if (rating > 0) {
+                            stars = 1
+                        }
+
+                        starClass = (rating > 0)? 'positive' : 'negative';
+                        scope.starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
+                    }
+                });
+
+            },
+            template: '<i ng-repeat="starClass in starClasses track by $index" class="large material-icons {{starClass}}">star</i>'
+        };
+});
+
 app.config(function ($translateProvider) {
   $translateProvider.translations('en', $tranlationEN);
   $translateProvider.translations('sk', $tranlationSK);
@@ -299,6 +341,8 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     $scope.selectedPerson = $rootScope.$storage.selectedPerson;
     $scope.selectedActivity = $rootScope.$storage.selectedActivity;
 
+    $scope.testdir = 'lolo';
+
     $scope.groupList = $scope.activities.reduce(function(previous, current) {
         if (previous.indexOf(current.group) === -1) {
             previous.push(current.group);
@@ -341,16 +385,14 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
 
     function setDayData(date) {
         $Rating.getDay(date).then(function($dayData) {
-            dayData = $dayData;
-            stars = $astro.getStars(dayData.rating);
-            starClass = (dayData.rating > 0)? 'positive' : 'negative';
+            $scope.ratingValue = $dayData.rating;
+            /*starClass = (dayData.rating > 0)? 'positive' : 'negative';
             starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
-
             $scope.starClasses = starClasses;
-            $scope.ratingValue = dayData.rating;
+            $scope.ratingValue = dayData.rating;*/
         });
 
-        $scope.hours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].fill('...');
+        $scope.hours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   
         angular.element(document.querySelector('md-backdrop')).triggerHandler('click');
         $Rating.getHours(date).then(function($hours) {
@@ -364,20 +406,27 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 0);
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
+            alert('find ok');
         } else {
             // debug
             setTimeout(function(){
                 $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-05 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-05 15:00:00","allday":false}];
-                $scope.$events = [];
                 setDayEvents($data);
             }, 200);
             //
         }
         function setDayEvents($data) {
+            alert($data);
+            $scope.$events = [];
+            for ($i=0; $i<24; $i++) {
+                $scope.$events[$i] = [];
+            }
             angular.forEach($data, function(event, key) {
                 hourId = parseInt(event.startDate.substr(11, 2));
-                $scope.$events[hourId] = event.title + ' ' + event.location;
+                $scope.$events[hourId].push(event.title + ' ' + event.location);
+                console.log(hourId);
             });
+            console.log($data);
             $scope.$apply();
         }
         function onError($msg) {
