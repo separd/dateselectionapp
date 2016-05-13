@@ -139,3 +139,10 @@ i.negative {
     font-size: 22px;
     margin-right: 10px;
 }
+md-card-content md-list-item .md-no-style, .dayinfo md-list-item .md-no-style, .dayinfo .md-subheader .md-subheader-inner {
+    padding-left: 0;
+    padding-right: 25px;
+}
+md-card-content md-list-item .md-secondary-container, .dayinfo md-list-item .md-secondary-container {
+    right: -10px;
+}

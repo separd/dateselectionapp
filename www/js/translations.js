@@ -61,7 +61,10 @@ var $tranlationEN = {
     DATE_MONTH: 'Month',
     DATE_YEAR: 'Year',
     DELETE_PERSON: 'Delete person',
-    CANCEL: 'Cancel'
+    CANCEL: 'Cancel',
+    DELETE_EVENT: 'Delte event',
+    DAY_EVENTS: 'Events for this day',
+    DAY_RATING: 'Day rating'
 
   };
 
@@ -129,6 +132,9 @@ var $tranlationSK = {
     DATE_YEAR: 'Rok',
     DELETE_PERSON: 'Zmazať osobu',
     CANCEL: 'Zrušiť',
+    DELETE_EVENT: 'Zrušiť udalosť',
+    DAY_EVENTS: 'Udalosti pre tento deň',
+    DAY_RATING: 'Rating dňa',
 
     'January': 'Január',
     'February': 'Február',

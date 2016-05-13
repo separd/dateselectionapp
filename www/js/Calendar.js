@@ -53,6 +53,7 @@ Calendar.prototype.createCalendar = function (calendarNameOrOptionsObject, succe
 };
 
 Calendar.prototype.deleteCalendar = function (calendarName, successCallback, errorCallback) {
+  alert(calendarName);
   cordova.exec(successCallback, errorCallback, "Calendar", "deleteCalendar", [{
     "calendarName": calendarName
   }]);

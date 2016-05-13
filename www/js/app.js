@@ -60,7 +60,6 @@ app.directive('menuToggle', function() {
 
 app.directive('starRating', function() {
     return {
-
             link: function(scope, $element, $attr) {
 
                 $attr.$observe('rating', function(rating){
@@ -257,10 +256,6 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
         }
     }
 
-    function setMothEvents($data) {
-        alert('Calendar success: ' + JSON.stringify(msg));
-    }
-
     $scope.activitySelect = function(activity) {
         $rootScope.$storage.selectedActivity = activity;
         setCalendarHtml();
@@ -386,10 +381,6 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     function setDayData(date) {
         $Rating.getDay(date).then(function($dayData) {
             $scope.ratingValue = $dayData.rating;
-            /*starClass = (dayData.rating > 0)? 'positive' : 'negative';
-            starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
-            $scope.starClasses = starClasses;
-            $scope.ratingValue = dayData.rating;*/
         });
 
         $scope.hours = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -402,36 +393,52 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
     }
 
     function getDayEvents() {
-
         var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 0);
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            alert(endDate);
             window.plugins.calendar.findEvent(null, null, null, date, endDate, setDayEvents, onError);
-            alert('find ok');
         } else {
             // debug
             setTimeout(function(){
                 $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-05 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-05 15:00:00","allday":false}];
-                setDayEvents(json$data);
+                setDayEvents($data);
             }, 200);
             //
         }
         function setDayEvents($data) {
-            alert($data);
-            $scope.$events = [];
+            $scope.$dayEvents = [];
+            $scope.$hourEvents = [];
             for ($i=0; $i<24; $i++) {
-                $scope.$events[$i] = [];
+                $scope.$hourEvents[$i] = [];
             }
             angular.forEach($data, function(event, key) {
-                hourId = parseInt(event.startDate.substr(11, 2));
-                $scope.$events[hourId].push(event.title + ' ' + event.location);
-                console.log(hourId);
+                myEvent = event.title + ' ' + event.location;
+
+                $scope.$dayEvents.push(myEvent);
+                if (!event.allday) {
+                    hourId = parseInt(event.startDate.substr(11, 2));
+                    $scope.$hourEvents[hourId].push(myEvent);
+                }
             });
-            console.log($data);
             $scope.$apply();
         }
         function onError($msg) {
-            document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
+            //document.getElementById('cdatatest').innerHTML = JSON.stringify($data);
+        }
+    }
+
+    $scope.addEvent = function($hour) {
+        var startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), $hour, 0, 0, 0);
+        var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), $hour, 59, 59, 0);
+
+        if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
+            window.plugins.calendar.createEventInteractively('', '', '', startDate, endDate, getNewDayEvents, onError);
+        } else {
+            setTimeout(function(){
+                getNewDayEvents();
+            }, 200);
+        }
+        function getNewDayEvents() {
+            getDayEvents();
         }
     }
 
