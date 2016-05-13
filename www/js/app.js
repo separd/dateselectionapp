@@ -412,9 +412,12 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
             }
             angular.forEach($data, function(event, key) {
                 myEvent = event.title + ' ' + event.location;
+                eventStart = new Date(event.startDate);
 
-                $scope.$dayEvents.push(myEvent);
-                if (!event.allday) {
+                if ((event.allday && eventStart.getDate() == date.getDate()) || !event.allday) {
+                    $scope.$dayEvents.push(myEvent);
+                }
+                if (!event.allday && eventStart.getDate() == date.getDate()) {
                     hourId = parseInt(event.startDate.substr(11, 2));
                     $scope.$hourEvents[hourId].push(myEvent);
                 }
@@ -432,7 +435,9 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
 
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
             window.plugins.calendar.createEventInteractively('', '', '', startDate, endDate, getNewDayEvents, onError);
+            alert(endDate);
         } else {
+            alert('Device not support this function');
             setTimeout(function(){
                 getNewDayEvents();
             }, 200);
