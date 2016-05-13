@@ -434,8 +434,9 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), $hour, 59, 59, 0);
 
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            window.plugins.calendar.createEventInteractively('', '', '', startDate, endDate, getNewDayEvents, onError);
             alert(endDate);
+            window.plugins.calendar.createEventInteractively('', '', '', startDate, endDate, getNewDayEvents, onError);
+            alert('create ok');
         } else {
             alert('Device not support this function');
             setTimeout(function(){
