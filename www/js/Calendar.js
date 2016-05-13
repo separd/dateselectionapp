@@ -126,7 +126,9 @@ Calendar.prototype.createEvent = function (title, location, notes, startDate, en
 };
 
 Calendar.prototype.createEventInteractively = function (title, location, notes, startDate, endDate, successCallback, errorCallback) {
+  alert('in Calendar');
   Calendar.prototype.createEventInteractivelyWithOptions(title, location, notes, startDate, endDate, {}, successCallback, errorCallback);
+  alert('end Calendar');
 };
 
 Calendar.prototype.createEventInteractivelyWithOptions = function (title, location, notes, startDate, endDate, options, successCallback, errorCallback) {

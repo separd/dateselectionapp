@@ -435,7 +435,7 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
 
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
             alert(endDate);
-            window.plugins.calendar.createEventInteractively('', '', '', startDate, endDate, getNewDayEvents, onError);
+            window.plugins.calendar.createEventInteractively('1', '2', '3', startDate, endDate, getNewDayEvents, onError);
             alert('create ok');
         } else {
             alert('Device not support this function');
