@@ -238,10 +238,10 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
         } else {
             // debug
-            /*setTimeout(function(){
-                $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-06 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-07 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-15 21:30:00","endDate":"2016-07-17 15:00:00","allday":false}];
+            setTimeout(function(){
+                $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-05-05 02:00:00","endDate":"2016-07-06 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-07 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-15 21:30:00","endDate":"2016-07-17 15:00:00","allday":false}];
                 setMothEvents($data);
-            }, 200);*/
+            }, 200);
         }
         function setMothEvents($data) {
             angular.forEach($data, function(event, key) {
@@ -399,11 +399,12 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         } else {
             // debug
             setTimeout(function(){
-                $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-05 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbove","title":"","startDate":"2016-07-05 21:30:00","endDate":"2016-07-05 15:00:00","allday":false}];
+                $data = [{"id":"23","message":"","location":"","title":"Sviatok svätého Cyrila a Metoda","startDate":"2016-07-05 02:00:00","endDate":"2016-07-05 02:00:00","allday":true},{"id":"24","message":"","location":"","title":"Testovacia udalost na rovnaký čas","startDate":"2016-07-05 21:30:00","endDate":"2016-07-10 16:00:00","allday":false},{"id":"25","message":"","location":"Vrbové","title":"Vrbovská vetry","startDate":"2016-07-05 21:30:00","endDate":"2016-07-05 15:00:00","allday":false}];
                 setDayEvents($data);
             }, 200);
             //
         }
+        
         function setDayEvents($data) {
             $scope.$dayEvents = [];
             $scope.$hourEvents = [];
@@ -411,15 +412,16 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
                 $scope.$hourEvents[$i] = [];
             }
             angular.forEach($data, function(event, key) {
-                myEvent = event.title + ' ' + event.location;
-                eventStart = new Date(event.startDate);
+                event.label = event.title + ' ' + event.location;
+                event.startDate = new Date(event.startDate);
+                event.endDate = new Date(event.endDate);
 
-                if ((event.allday && eventStart.getDate() == date.getDate()) || !event.allday) {
-                    $scope.$dayEvents.push(myEvent);
+                if ((event.allday && event.startDate.getDate() == date.getDate()) || !event.allday) {
+                    $scope.$dayEvents.push(event);
                 }
-                if (!event.allday && eventStart.getDate() == date.getDate()) {
-                    hourId = parseInt(event.startDate.substr(11, 2));
-                    $scope.$hourEvents[hourId].push(myEvent);
+                if (!event.allday && event.startDate.getDate() == date.getDate()) {
+                    hourId = parseInt(event.startDate.getHours());
+                    $scope.$hourEvents[hourId].push(event);
                 }
             });
             $scope.$apply();
@@ -434,17 +436,13 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         var endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), $hour, 59, 59, 0);
 
         if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
-            alert(endDate);
-            window.plugins.calendar.createEventInteractively('1', '2', '3', startDate, endDate, getNewDayEvents, onError);
-            alert('create ok');
+            window.plugins.calendar.createEventInteractively('', '', '', startDate, endDate, getNewDayEvents, onError);
         } else {
-            alert('Device not support this function');
             setTimeout(function(){
-                getNewDayEvents();
+                getNewDayEvents('non');
             }, 200);
         }
         function getNewDayEvents($data) {
-            alert(JSON.stringify($data));
             getDayEvents();
         }
         function onError($msg) {
@@ -452,7 +450,72 @@ app.controller("dayCtrl", function($scope, $rootScope, $routeParams, $filter, $t
         }
     }
 
-})
+    $scope.deleteEventForm = function(deleteEvent) {
+        $mdBottomSheet.show({
+                  templateUrl: 'pages/event-detail.html',
+                  controller: 'deleteEventCtrl',
+                  resolve: {
+                    deleteEvent: function () {
+                        return deleteEvent;
+                    }
+                  }
+        }).then(function(refresh) {
+            if (refresh) {
+                getDayEvents();
+            }
+        });;
+    }
+
+    $scope.showEventForm = function(showEvent) {
+        $mdBottomSheet.show({
+                  templateUrl: 'pages/event-detail.html',
+                  controller: 'showEventCtrl',
+                  resolve: {
+                    showEvent: function () {
+                        return showEvent;
+                    }
+                  }
+        });
+    }
+
+});
+
+app.controller("showEventCtrl", function($scope, $mdBottomSheet, showEvent) {
+
+    $scope.event = showEvent;
+
+    $scope.okButton = function() {
+        $mdBottomSheet.hide();
+    };
+
+});
+
+app.controller("deleteEventCtrl", function($scope, $mdBottomSheet, deleteEvent) {
+
+    $scope.event = deleteEvent;
+    $scope.delete = true;
+
+    $scope.deleteEvent = function() {
+        if (typeof(window.plugins) != 'undefined' && typeof(window.plugins.calendar) != 'undefined') {
+            window.plugins.calendar.deleteEvent(deleteEvent.title, deleteEvent.location, null, deleteEvent.startDate, deleteEvent.endDate, eventDeleted, onError);
+        } else {
+            $mdBottomSheet.hide();
+        }
+
+        function eventDeleted($data) {
+            $mdBottomSheet.hide(true);
+        }
+
+        function onError($msg) {
+            alert(JSON.stringify($msg));
+        }
+    };
+
+    $scope.deleteCancel = function() {
+        $mdBottomSheet.hide();
+    };
+
+});
 
 app.controller("languageCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, MaterialCalendarData, $localStorage) {
 

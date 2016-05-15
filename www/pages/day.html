@@ -30,9 +30,9 @@
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">{{'DAY_EVENTS' | translate}}:</md-subheader>
             <md-list>
-              <md-list-item ng-repeat="$event in $dayEvents" ng-click="goToPerson(person.name, $event)">
-                <p>{{$event}}</p>
-                <md-icon md-svg-src="img/close-circle.svg" ng-click="deletePersonForm(key)" class="md-secondary md-hue-3" aria-label="{{'DELETE_EVENT' | translate}}"></md-icon>
+              <md-list-item ng-repeat="$dayEvent in $dayEvents" ng-click="showEventForm($dayEvent)">
+                <p>{{$dayEvent.label}}</p>
+                <md-icon md-svg-src="img/close-circle.svg" ng-click="deleteEventForm($dayEvent)" class="md-secondary md-hue-3" aria-label="{{'DELETE_EVENT' | translate}}"></md-icon>
               </md-list-item>
             </md-list>
           </div>
@@ -47,9 +47,9 @@
             <div ng-if="$hourEvents[$index].length > 0">
               <md-divider ></md-divider>
               <md-list>
-              <md-list-item ng-repeat="$event in $hourEvents[$index]" ng-click="goToPerson(person.name, $event)">
-                <p>{{$event}}</p>
-                <md-icon md-svg-src="img/close-circle.svg" ng-click="deletePersonForm(key)" class="md-secondary md-hue-3" aria-label="{{'DELETE_EVENT' | translate}}"></md-icon>
+              <md-list-item ng-repeat="$hourEvent in $hourEvents[$index]" ng-click="showEventForm($hourEvent)">
+                <p>{{$hourEvent.label}}</p>
+                <md-icon md-svg-src="img/close-circle.svg" ng-click="deleteEventForm($hourEvent)" class="md-secondary md-hue-3" aria-label="{{'DELETE_EVENT' | translate}}"></md-icon>
               </md-list-item>
               </md-list>
             </div>
