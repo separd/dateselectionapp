@@ -1,0 +1,44 @@
+<a home-link ng-click="menuarrow = !menuarrow" ng-init="menuarrow = true">
+      <ng-hamburger-helper arrow-when="menuarrow"></ng-hamburger-helper>
+</a>
+<div class="container layout-title">Wellcome</div>
+
+<div class="page-content" style="height: calc(100vh - 42px)">
+  <div class="container">
+  <form ng-submit="submit()" ng-cloak>
+    <h5>{{'SELECT_LANGUAGE' | translate}}:</h5>
+    <md-radio-group ng-model="laguage" ng-change="laguageSelect(laguage)">
+      <md-radio-button value="en" class="md-primary">English</md-radio-button>
+      <md-radio-button value="sk" class="md-primary">Slovensky</md-radio-button>
+    </md-radio-group>
+
+    <h5>{{'YOUR_BIRTH_DATE' | translate}}:</h5>
+    <div layout="row" layout="column">
+      <div flex="20">
+        <md-input-container class="md-block">
+          <label>{{'DATE_DAY' | translate}}</label>
+          <input ng-model="user.dateday" type="number">
+        </md-input-container>
+      </div>
+
+      <div flex="50">
+        <md-input-container class="md-block">
+          <label>{{'DATE_MONTH' | translate}}</label>
+          <md-select ng-model="user.datemonth" class="selectmonth">
+            <md-option ng-repeat="(datenum, datemonth) in datemonths" value="{{datenum}}">{{datemonth | translate}}</md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+
+      <div flex="30">
+        <md-input-container class="md-block">
+          <label>{{'DATE_YEAR' | translate}}</label>
+          <input ng-model="user.dateyear" type="number">
+        </md-input-container>
+      </div>
+    </div>
+    <md-button class="md-raised md-primary" ng-click="saveMe()">{{'SAVE' | translate}}</md-button>
+  </form>
+
+  </div>
+</div>

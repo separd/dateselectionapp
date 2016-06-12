@@ -1,0 +1,24 @@
+<a home-link ng-click="menuarrow = !menuarrow" ng-init="menuarrow = true">
+      <ng-hamburger-helper arrow-when="menuarrow"></ng-hamburger-helper>
+</a>
+<div class="container layout-title">LANGUAGE</div>
+
+<div class="page-content" style="height: calc(100vh - 100px)">
+  <div class="container">
+  <form ng-submit="submit()" ng-cloak>
+    <h5>{{'SELECT_LANGUAGE' | translate}}:</h5>
+    <md-radio-group ng-model="laguage" ng-change="laguageSelect(laguage)">
+      <md-radio-button value="en" class="md-primary">English</md-radio-button>
+      <md-radio-button value="sk" class="md-primary">Slovensky</md-radio-button>
+    </md-radio-group>
+
+    <h5>{{'WEEK_STARTS_WITH' | translate}}:</h5>
+    <md-radio-group ng-model="weekstart" ng-change="setWeekStart(weekstart)">
+      <md-radio-button value="0" class="md-primary">{{'Sunday' | translate}}</md-radio-button>
+      <md-radio-button value="1" class="md-primary">{{'Monday' | translate}}</md-radio-button>
+    </md-radio-group>
+
+  </form>
+  <a ng-click="debugReset()" style="position: absolute; bottom: 20px; right: 20px; color: #CCCCCC">Reset - debug</a>
+  </div>
+</div>

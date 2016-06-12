@@ -1,0 +1,13 @@
+<md-bottom-sheet class="md-grid" layout="column" ng-cloak>
+	<form>
+		<md-list-item class="md-2-line">
+			<div class="md-list-item-text">
+				<h3>{{person.name}}</h3>
+				<p>{{person.date | date:'d'}}. {{person.date | date:'MMMM' | translate}} {{person.date | date:'yyyy'}}</p>
+			</div>
+		</md-list-item>
+		<md-button class="md-raised md-warn" ng-click="deletePerson()">{{'DELETE_PERSON' | translate}}</md-button>
+		<span flex></span>
+		<md-button ng-click="deleteCancel()">{{'CANCEL' | translate}}</md-button>
+	</form>
+</md-bottom-sheet>

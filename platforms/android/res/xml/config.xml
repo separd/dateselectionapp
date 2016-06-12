@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="guru.dateselection.calendar" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <preference name="loglevel" value="DEBUG" />
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <preference name="webView" value="org.crosswalk.engine.XWalkWebViewEngine" />
+    <preference default="xwalk_core_library_beta:18+" name="xwalkVersion" />
+    <preference default="xwalk_core_library_canary:17+" name="xwalkLiteVersion" />
+    <preference default="--disable-pull-to-refresh-effect" name="xwalkCommandLine" />
+    <preference default="embedded" name="xwalkMode" />
+    <preference default="true" name="xwalkMultipleApk" />
+    <feature name="Calendar">
+        <param name="android-package" value="nl.xservices.plugins.Calendar" />
+    </feature>
+    <feature name="SplashScreen">
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="Globalization">
+        <param name="android-package" value="org.apache.cordova.globalization.Globalization" />
+    </feature>
+    <splash density="land-hdpi" src="www/img/splash-320-480.png" />
+    <splash density="land-ldpi" src="www/img/splash-320-480.png" />
+    <splash density="land-mdpi" src="www/img/splash-320-480.png" />
+    <splash density="land-xhdpi" src="www/img/splash-320-480.png" />
+    <splash density="port-hdpi" src="www/img/splash-320-480.png" />
+    <splash density="port-ldpi" src="www/img/splash-320-480.png" />
+    <splash density="port-mdpi" src="www/img/splash-320-480.png" />
+    <splash density="port-xhdpi" src="www/img/splash-320-480.png" />
+    <allow-intent href="market:*" />
+    <name>Guru Calendar</name>
+    <description>
+        Testujeme kalendar
+    </description>
+    <author email="separdsoft@gmail.com" href="dateselection.guru">
+       Separd
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <icon src="www/img/logo-guru.png" />
+    <preference name="SplashScreenDelay" value="8000" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <preference name="xwalkVersion" value="xwalk_core_library_beta:18+" />
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+    <preference name="xwalkMode" value="embedded" />
+    <preference name="xwalkMultipleApk" value="true" />
+    <preference name="orientation" value="portrait" />
+</widget>

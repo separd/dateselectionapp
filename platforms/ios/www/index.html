@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="en" xng-app="dateselectionguru" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="DATESELECTION GURU" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DATESELECTION GURU</title>
+    <link rel="stylesheet" href="css/roboto.css" />
+    <link rel="stylesheet" href="css/icon.css" />
+    <link rel="stylesheet" href="css/material.min.css" />
+    <link rel="stylesheet" href="css/angular-material-min.css" />
+    <link rel="stylesheet" href="css/ng-hamburger-helper.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/material-preloader.css" />
+</head>
+<body>
+<div class="layout-transparent mdl-layout mdl-js-layout">
+	<div class="mdl-layout__drawer">
+		<span class="mdl-layout-title">GURU MENU</span>
+		<nav class="mdl-navigation" >
+            <a class="mdl-navigation__link" menu-toggle href="#/">{{'CALENDAR' | translate}}</a>
+			<a class="mdl-navigation__link" menu-toggle href="#person-list">{{'PERSON_LIST' | translate}}</a>
+            <a class="mdl-navigation__link" menu-toggle href="#settings">{{'SETTINGS' | translate}}</a>
+		</nav>
+	</div>
+	<main class="mdl-layout__content">
+        <div ng-view></div>
+    </main>
+</div>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/Calendar.js"></script>
+<script src="js/material.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-animate.min.js"></script>
+<script src="js/angular-aria.min.js"></script>
+<script src="js/angular-sanitize.min.js"></script>
+<script src="js/angular-material.min.js"></script>
+<script src="js/angular-route.min.js"></script>
+<script src="js/ngStorage.min.js"></script>
+<script src="js/ng-hamburger-helper.js"></script>
+<script src="js/angular-material-preloader.min.js"></script>
+<script src="js/angular-material-calendar.js"></script>
+<script src="js/angular-translate.min.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/astro-source.js"></script>
+<script src="js/dagua.js"></script>
+<script src="js/astro.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

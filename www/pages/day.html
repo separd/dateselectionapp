@@ -22,10 +22,6 @@
           </div>
         </md-toolbar>
       <div class="dayinfo">
-          <div layout="row" layout-align="space-between center">
-              <div class="md-title">{{'DAY_RATING' | translate}}</div>
-              <star-rating rating="{{ratingValue}}"></star-rating>
-          </div>
           <div ng-if="$dayEvents.length > 0">
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">{{'DAY_EVENTS' | translate}}:</md-subheader>
@@ -41,7 +37,7 @@
           <md-card-content>
             <div layout="row" layout-align="space-between center">
               <div class="md-title"><strong>{{($index>9)? '' : '0'}}{{$index}}:00</strong></div>
-              <star-rating rating="{{$rating}}"></star-rating>
+              <div class="hourrating"><star-rating rating="{{$rating}}"></star-rating></div>
               <div><md-button class="md-fab md-mini" aria-label="add" ng-click="addEvent($index)">+</md-button></div>
             </div>
             <div ng-if="$hourEvents[$index].length > 0">

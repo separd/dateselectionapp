@@ -1,0 +1,26 @@
+<md-bottom-sheet class="md-grid" layout="column" ng-cloak>
+	<form>
+		<h5>{{event.title}}</h5>
+		<p>
+			<strong>{{event.startDate | date:'d'}}. {{event.startDate | date:'MMMM' | translate}} {{event.startDate | date:'yyyy H:mm'}}</strong>
+			<span ng-if="event.allday">
+				{{'ALLDAY' | translate}}
+			</span>
+			<span ng-if="!event.allday">
+				{{'TO' | translate}}
+				<strong>{{event.endDate | date:'d'}}. {{event.endDate | date:'MMMM' | translate}} {{event.endDate | date:'yyyy H:mm'}}</strong>
+			</span>
+		</p>
+		<p ng-if="event.location != ''">
+			<md-icon md-svg-src="img/location.svg" class="md-secondary md-hue-3" aria-label="{{'LOCATION' | translate}}"></md-icon> {{event.location}}
+		</p>
+
+		<p ng-if="delete">
+			<md-button class="md-raised md-warn" ng-click="deleteEvent()">{{'DELETE_EVENT' | translate}}</md-button>
+			<md-button ng-click="deleteCancel()">{{'CANCEL' | translate}}</md-button>
+		</p>
+		<p ng-if="!delete">
+			<md-button ng-click="okButton()">{{'OK' | translate}}</md-button>
+		</p>
+	</form>
+</md-bottom-sheet>

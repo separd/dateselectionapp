@@ -7,14 +7,9 @@
     <author email="separdsoft@gmail.com" href="dateselection.guru">
        Separd
     </author>
-    
+
     <content src="index.html" />
-
-    <plugin name="cordova-plugin-whitelist" version="1" />
-    <plugin name="cordova-plugin-calendar" />
-    <preference name="android-build-tool" value="gradle" />
-    <feature name="http://api.phonegap.com/1.0/network" />
-
+    <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -22,15 +17,33 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-
-    <icon src="img/logo-guru.png" />
+    <icon src="www/img/logo-guru.png" />
     <platform name="android">
+        <splash src="www/img/splash-320-480.png" density="land-hdpi"/>
+        <splash src="www/img/splash-320-480.png" density="land-ldpi"/>
+        <splash src="www/img/splash-320-480.png" density="land-mdpi"/>
+        <splash src="www/img/splash-320-480.png" density="land-xhdpi"/>
+
+        <splash src="www/img/splash-320-480.png" density="port-hdpi"/>
+        <splash src="www/img/splash-320-480.png" density="port-ldpi"/>
+        <splash src="www/img/splash-320-480.png" density="port-mdpi"/>
+        <splash src="www/img/splash-320-480.png" density="port-xhdpi"/>
+
         <allow-intent href="market:*" />
-        <icon src="www/img/logo-guru.png" qualifier="mdpi" />
     </platform>
     <platform name="ios">
+        <splash src="www/img/splash-320-480.png" width="320" height="480"/>
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
-        <icon src="www/img/logo-guru.png" qualifier="mdpi" />
     </platform>
+    <preference name="SplashScreenDelay" value="8000" />
+    <preference name="ShowSplashScreenSpinner" value="true"/>
+
+    <preference name="xwalkVersion" value="xwalk_core_library_beta:18+" />
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+    <preference name="xwalkMode" value="embedded" />
+    <preference name="xwalkMultipleApk" value="true" />
+
+    <preference name="orientation" value="portrait" />
+
 </widget>
