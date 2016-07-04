@@ -99,7 +99,7 @@ app.directive('starRating', function() {
                         if (rating < -2) {
                             mark = 'fa-times negative'
                         } else if (rating  < 2) {
-                            mark = 'fa-adjust neutral'
+                            mark = 0
                         } else if (rating < 5) {
                             mark = 'fa-check positive'
                         } else {
@@ -112,7 +112,8 @@ app.directive('starRating', function() {
             },
             template: function (scope) {
                 template = '<div ng-if="mark == 1"><span class="fa-stack double positive"><i class="fa fa-check fa-stack-1x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i><i class="fa fa-check fa-stack-1x"></i></span></div>';
-                template += '<div ng-if="mark != 1"><i class="fa {{mark}}"></i></div>';
+                template += '<div ng-if="mark == 0"></div>';
+                template += '<div ng-if="mark != 1 && mark != 0"><i class="fa {{mark}}"></i></div>';
                 return template;
             }
         };
@@ -651,9 +652,21 @@ app.controller("wellcomeCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
 app.controller("personCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, $localStorage, $mdBottomSheet) {
 
-      $translate.use($rootScope.$storage.locale.lang);
+    $translate.use($rootScope.$storage.locale.lang);
 
-      $scope.personlist = $rootScope.$storage.personlist;
+    $scope.personlist = $rootScope.$storage.personlist;
+    angular.forEach($rootScope.$storage.personlist, function($person, $personKey) {
+        if ($rootScope.$storage.selectedPerson.indexOf($personKey) == -1) {
+            $scope.personlist[$personKey].selected = false;
+        } else {
+            $scope.personlist[$personKey].selected = true;
+        }
+        if ($personKey == 0) {
+            $scope.personlist[$personKey].me = true;
+        } else {
+            $scope.personlist[$personKey].me = false;
+        }
+    })
 
       $scope.addPersonForm = function() {
             $mdBottomSheet.show({
@@ -685,6 +698,16 @@ app.controller("personCtrl", function($scope, $rootScope, $filter, $q, $timeout,
                   }
             })
       };
+
+    $scope.selectPerson = function(key) {
+        console.log(key);
+        $rootScope.$storage.selectedPerson = [];
+        angular.forEach($rootScope.$storage.personlist, function($person, $personKey) {
+            if ($person.selected) {
+                $rootScope.$storage.selectedPerson.push($personKey);
+            }
+        })
+    }
 
 });
 

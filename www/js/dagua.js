@@ -56,19 +56,21 @@ app.factory("$dagua", function($filter) {return {
 
     getDaguaPersonal: function($hexagrams) {
         
-        $dayHexagrams = {};
-        $personHexagrams = {};
+        var $dayHexagrams = {};
+        var $personHexagrams = {};
+        var $personalAspect = 1;
         angular.forEach($hexagrams, function($hexagram, $k) {
             if ($k.indexOf('person') == 0) {
                 $personHexagrams[$k] = $hexagram;
+                $personalAspect++;
             } else {
                 $dayHexagrams[$k] = $hexagram;
             }
         });
 
         
-        $dayRatings = this.getDagua($dayHexagrams);
-        $ratings = [];
+        var $dayRatings = this.getDagua($dayHexagrams);
+        var $ratings = [];
         for ($i=1; $i<=10; $i++) {
             $ratings[$i] =  $dayRatings[$i] || 0;
         }
@@ -82,9 +84,9 @@ app.factory("$dagua", function($filter) {return {
                 var $dr = $dayRatings[$i] || 0;
                 var $pr = $personalRatings[$i] || 0;
                 if ($dr > 0 && $pr == 0) {
-                    $ratings[$i] -= $dr / 2;
+                    $ratings[$i] -= $dr / $personalAspect;
                 } else {
-                    $ratings[$i] += $pr / 2;
+                    $ratings[$i] += $pr / $personalAspect;
                 }
             }
         }, this);

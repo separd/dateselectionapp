@@ -13,38 +13,20 @@ html,body{font-family:"Roboto",sans-serif;}.styles__ribbon{background-color:rgba
     right: 0;
     bottom: 0;
 }
-.calendar .layout-row .activity {
+.calendar .layout-row .today {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    opacity: 0.2;
+    opacity: 0.3;
+    background-color: #66FF66;
 }
-/*.calendar .layout-row .daydata.activity1 {
-    background-color: #c8e6c9;
+.googday {
+    color: #006600;
 }
-.calendar .layout-row .daydata.activity1, .calendar .layout-row .daydata.activity2 {
-    background-color: #a5d6a7;
-}*/
-.calendar .layout-row .activity1 {
-    background-color: #66bb6a;
-}
-/*.calendar .layout-row .daydata.activity4 {
-    background-color: #388e3c;
-}*/
-.calendar .layout-row .activity2 {
-    background-color: #1b5e20;
-}
-.ratingwrap {
-    position: absolute;
-    left: 10%;
-    right: 10%;
-    bottom: 10%;
-    top: 80%;
-    background-color: #CCDDFF;
-    z-index: 10;
-    opacity: 1;
+.googday {
+    color: #CC0000;
 }
 .ratingval {
     position: absolute;
@@ -123,14 +105,14 @@ md-option {
     height: calc(100vh - 220px);
     margin-bottom: 25px;
 }
-i.positive {
-    color: #CC0000;
+i.positive, .positive {
+    color: #006600;
 }
 i.neutral {
-    color: #CCCCCC;
+    color: #AAAAAA;
 }
 i.negative {
-    color: #000000;
+    color: #CC0000;
 }
 .dayinfo {
     margin: 20px;
@@ -149,4 +131,44 @@ md-card-content md-list-item .md-no-style, .dayinfo md-list-item .md-no-style, .
 }
 md-card-content md-list-item .md-secondary-container, .dayinfo md-list-item .md-secondary-container {
     right: -10px;
+}
+
+.ratingwrap {
+    position: absolute;
+    right: 0%;
+    bottom: -5px;
+    z-index: 10;
+    opacity: 1;
+    font-size: 1.2em;
+}
+.ratingwrap > star-rating > div > i {
+    margin: 0 7px 3px 0;
+}
+.double i:first-child {
+    margin-left: 2px;
+}
+.double i.fa-inverse {
+    margin-left: -4px;
+}
+.double i:last-child {
+    margin-left: -6px;
+}
+
+.hourrating {
+    font-size: 22px;
+}
+.hourrating .double i:first-child {
+    margin-left: 2px;
+}
+.hourrating .double i.fa-inverse {
+    margin-left: -4px;
+}
+.hourrating .double i:last-child {
+    margin-left: -4px;
+}
+.person-name {
+    font-size: 18px;
+    line-height: 18px;
+    color: #333333;
+    display: block;
 }

@@ -22,17 +22,6 @@ html,body{font-family:"Roboto",sans-serif;}.styles__ribbon{background-color:rgba
     opacity: 0.3;
     background-color: #66FF66;
 }
-.ratingwrap {
-    position: absolute;
-    right: 0%;
-    bottom: 0%;
-    z-index: 10;
-    opacity: 1;
-    font-size: 0.8em;
-}
-.ratingwrap > star-rating > div > i {
-    margin-right: 3px;
-}
 .googday {
     color: #006600;
 }
@@ -143,19 +132,31 @@ md-card-content md-list-item .md-no-style, .dayinfo md-list-item .md-no-style, .
 md-card-content md-list-item .md-secondary-container, .dayinfo md-list-item .md-secondary-container {
     right: -10px;
 }
+
+.ratingwrap {
+    position: absolute;
+    right: 0%;
+    bottom: -5px;
+    z-index: 10;
+    opacity: 1;
+    font-size: 1.2em;
+}
+.ratingwrap > star-rating > div > i {
+    margin: 0 7px 3px 0;
+}
+.double i:first-child {
+    margin-left: 2px;
+}
+.double i.fa-inverse {
+    margin-left: -4px;
+}
+.double i:last-child {
+    margin-left: -6px;
+}
+
 .hourrating {
     font-size: 22px;
 }
-.double i:first-child {
-    margin-left: 1px;
-}
-.double i.fa-inverse {
-    margin-left: -3px;
-}
-.double i:last-child {
-    margin-left: -4px;
-}
-
 .hourrating .double i:first-child {
     margin-left: 2px;
 }
@@ -164,4 +165,10 @@ md-card-content md-list-item .md-secondary-container, .dayinfo md-list-item .md-
 }
 .hourrating .double i:last-child {
     margin-left: -4px;
+}
+.person-name {
+    font-size: 18px;
+    line-height: 18px;
+    color: #333333;
+    display: block;
 }

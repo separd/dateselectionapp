@@ -94,43 +94,44 @@ app.directive('menuToggle', function() {
 app.directive('starRating', function() {
     return {
             link: function(scope, $element, $attr) {
-
                 $attr.$observe('rating', function(rating){
                     if(rating){
-   
-                        if (rating < -8) {
-                            stars = 5
-                        } else if (rating < -6) {
-                            stars = 4
-                        } else if (rating < -4) {
-                            stars = 3
-                        } else if (rating < -2) {
-                            stars = 2
-                        } else if (rating < 0) {
-                            stars = 1
-                        } else if (rating  == 0) {
-                            stars = 0
-                        } else if (rating > 8) {
-                            stars = 5
-                        } else if (rating > 6) {
-                            stars = 4
-                        } else if (rating > 4) {
-                            stars = 3
-                        } else if (rating > 2) {
-                            stars = 2
-                        } else if (rating > 0) {
-                            stars = 1
+                        if (rating < -2) {
+                            mark = 'fa-times negative'
+                        } else if (rating  < 2) {
+                            mark = 0
+                        } else if (rating < 5) {
+                            mark = 'fa-check positive'
+                        } else {
+                            mark = 1
                         }
-
-                        starClass = (rating > 0)? 'positive' : 'negative';
-                        scope.starClasses = [0, 0, 0, 0, 0].fill('neutral').fill(starClass, 0, stars);
+                        scope.mark = mark;
                     }
                 });
 
             },
-            template: '<i ng-repeat="starClass in starClasses track by $index" class="large material-icons {{starClass}}">star</i>'
+            template: function (scope) {
+                template = '<div ng-if="mark == 1"><span class="fa-stack double positive"><i class="fa fa-check fa-stack-1x"></i><i class="fa fa-check fa-inverse fa-stack-1x"></i><i class="fa fa-check fa-stack-1x"></i></span></div>';
+                template += '<div ng-if="mark == 0"></div>';
+                template += '<div ng-if="mark != 1 && mark != 0"><i class="fa {{mark}}"></i></div>';
+                return template;
+            }
         };
 });
+
+app.directive('compile', ['$compile', function ($compile) {
+    return function(scope, element, attrs) {
+        scope.$watch(
+            function(scope) {
+                return scope.$eval(attrs.compile);
+            },
+            function(value) {
+                element.html(value);
+                $compile(element.contents())(scope);
+            }
+        );
+    };
+}])
 
 app.config(function ($translateProvider) {
   $translateProvider.translations('en', $tranlationEN);
@@ -196,7 +197,11 @@ app.factory('$Rating', function($q, $astro, $timeout, $rootScope, $localStorage)
 
             var date = new Date($monthStart.getFullYear(), $monthStart.getMonth(), 1, 0, 0, 0, 0);
             while (date.getMonth() == myMonth) {
-                monthData.push($astro.getRating(date, activityPerson.activity, activityPerson.person));
+                ratingData = $astro.getRating(date, activityPerson.activity, activityPerson.person);
+                if (!activityPerson.activity) {
+                    ratingData.filter = -1;
+                }
+                monthData.push(ratingData);
                 date.setDate(date.getDate() + 1);
             }
 
@@ -280,6 +285,10 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
             window.plugins.calendar.findEvent(null, null, null, $scope.monthStart, endDate, setMothEvents, onError);
         } else {
             $mdToast.show($mdToast.simple().content($translate.instant('CALENDAR_WARNING')));
+            $timeout(function() {
+                $scope.$apply();
+            }, 500);
+            
         }
         function setMothEvents($data) {
             angular.forEach($data, function(event, key) {
@@ -322,16 +331,24 @@ app.controller("calendarCtrl", function($scope, $rootScope, $filter, $q, $timeou
     function getDayHtml(dayData, date) {
 
         dayHTML = '<div class="daydata">';
-        if (dayData.filter > 0) {
-            activityClass = (dayData.filter > 5)? 2 : 1;
-            dayHTML += '<div class="activity activity' + activityClass + '"></div>';
+        if (dayData.filter != -1) {
+            if (dayData.filter > 5) {
+                dayRating = 8;
+            } else if (dayData.filter > 0) {
+                dayRating = 3;
+            } else {
+                dayRating = -5;
+            }
+        } else {
+            dayRating = dayData.rating;
         }
         dateId = $filter("date")(date, "yyyy-MM-dd");
+        toDay = new Date();
+        if ($filter("date")(toDay, "yyyy-MM-dd") == dateId) {
+            dayHTML += '<div class="today"></div>';
+        }
 
-        stars = $astro.getStars(dayData.rating);          
-        ratingClass = (dayData.rating < 0)? 'negative' : 'positive';
-        ratingPerc = Math.abs(stars) * 20;
-        dayHTML += '<div class="ratingwrap" title="' + dayData.rating + '"><div class="ratingval ratingval' + ratingPerc + ' ' + ratingClass + '"></div></div>';
+        dayHTML += '<div class="ratingwrap"><star-rating rating="' + dayRating + '"></star-rating></div>';
         dayHTML += '<div class="event event_' + dateId + '" id="event_' + dateId + '"></div>';
         dayHTML += '</div>';
 
@@ -635,9 +652,21 @@ app.controller("wellcomeCtrl", function($scope, $rootScope, $filter, $q, $timeou
 
 app.controller("personCtrl", function($scope, $rootScope, $filter, $q, $timeout, $log, $translate, $localStorage, $mdBottomSheet) {
 
-      $translate.use($rootScope.$storage.locale.lang);
+    $translate.use($rootScope.$storage.locale.lang);
 
-      $scope.personlist = $rootScope.$storage.personlist;
+    $scope.personlist = $rootScope.$storage.personlist;
+    angular.forEach($rootScope.$storage.personlist, function($person, $personKey) {
+        if ($rootScope.$storage.selectedPerson.indexOf($personKey) == -1) {
+            $scope.personlist[$personKey].selected = false;
+        } else {
+            $scope.personlist[$personKey].selected = true;
+        }
+        if ($personKey == 0) {
+            $scope.personlist[$personKey].me = true;
+        } else {
+            $scope.personlist[$personKey].me = false;
+        }
+    })
 
       $scope.addPersonForm = function() {
             $mdBottomSheet.show({
@@ -669,6 +698,16 @@ app.controller("personCtrl", function($scope, $rootScope, $filter, $q, $timeout,
                   }
             })
       };
+
+    $scope.selectPerson = function(key) {
+        console.log(key);
+        $rootScope.$storage.selectedPerson = [];
+        angular.forEach($rootScope.$storage.personlist, function($person, $personKey) {
+            if ($person.selected) {
+                $rootScope.$storage.selectedPerson.push($personKey);
+            }
+        })
+    }
 
 });
 
